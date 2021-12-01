@@ -1,43 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
+import { ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LoginUserDto } from './dto/login-user.dto';
 
+@ApiTags("用户相关接口")
 @Controller('user')
-export class UserController {
+export class UserController{
   constructor(private readonly userService: UserService, private readonly authService: AuthService) { }
 
-  @Post()
+  @ApiOperation({summary:"创建用户"})
+  @Post('create')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  // @UseGuards(AuthGuard("local"))
+  @ApiOperation({summary:"用户登录"})
+  @ApiBody({type:LoginUserDto})
+  @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Body() req: any) {
-    console.log(req);
-    return this.authService.login(req);
+  login(@Req() req:any) {
+    return this.authService.login(req.user);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Req() req){
+    // return req;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
 }

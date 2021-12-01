@@ -19,7 +19,7 @@ import { VideoModule } from './modules/video/video.module';
     database: 'live',
     entities: ["dist/**/*.entity{.ts,.js}"],
     synchronize: true,
-  }), UserModule, VideoModule,AuthModule
+  }), UserModule, VideoModule, AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -28,8 +28,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(RegisterMiddleware)
-      .exclude({ path: 'user/create', method: RequestMethod.POST })
-      .forRoutes(UserController);
-      
+      .forRoutes({ path: 'user/create', method: RequestMethod.POST });
   }
 }

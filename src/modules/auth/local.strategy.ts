@@ -8,14 +8,13 @@ import { User } from 'src/entities/user.entity';
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly authService: AuthService) {
         super({
-            numberField: 'number',
+            usernameField : 'number',
             passwordField: 'password',
         } as IStrategyOptions);
 
     }
 
     async validate(number: string, password: string): Promise<User> {
-        console.log(number);
         const user = await this.authService.validate(number, password);
         if (user) {
             return user;
