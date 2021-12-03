@@ -11,11 +11,11 @@ export class User extends Time {
     @Column({ comment: '账号' })
     number: string;
 
-    @ApiProperty()
+    @ApiProperty({ default: '1234' })
     @Column({ comment: '密码' })
     password: string;
 
-    @ApiProperty()
+    @ApiProperty({ default: null })
     @Column({ comment: '昵称' })
     nickname: string;
 
@@ -27,7 +27,7 @@ export class User extends Time {
     @Column({ comment: '电话', default: null })
     mobile: string;
 
-    @ApiPropertyOptional({default:3})
+    @ApiPropertyOptional({ default: 3 })
     @Column({ comment: '性别,1男2女3未知', type: 'integer', default: 3 })
     gender: number;
 
@@ -35,6 +35,7 @@ export class User extends Time {
     @Column({ comment: '生日', type: 'date', default: null })
     birthday: Date;
 
-    @Column({ default: null })
-    type: string;
+    @ApiPropertyOptional({ default: 1 })
+    @Column({ comment: '0超级管理员1普通', default: 1 })
+    type: number;
 }

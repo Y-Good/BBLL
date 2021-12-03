@@ -14,7 +14,7 @@ export class UserController{
   @ApiOperation({summary:"创建用户"})
   @Post('create')
   create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+   this.userService.create(createUserDto);
   }
 
   @ApiOperation({summary:"用户登录"})

@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { IStrategyOptions, Strategy } from 'passport-local';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/entities/user.entity';
 
@@ -20,7 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             return user;
         }
         else {
-            throw new UnauthorizedException('密码错误');
+            throw new ConflictException('密码错误');
         }
     }
 }

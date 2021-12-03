@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLiveDto } from './dto/create-live.dto';
 import { UpdateLiveDto } from './dto/update-live.dto';
-
+import * as NodeMediaServer from 'node-media-server';
+import { liveConfig } from 'src/config/live.config';
 @Injectable()
 export class LiveService {
   create(createLiveDto: CreateLiveDto) {
@@ -12,15 +13,9 @@ export class LiveService {
     return `This action returns all live`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} live`;
-  }
 
-  update(id: number, updateLiveDto: UpdateLiveDto) {
-    return `This action updates a #${id} live`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} live`;
+  startLiveService(){
+    let nms = new NodeMediaServer(liveConfig);
+    nms.run();
   }
 }
