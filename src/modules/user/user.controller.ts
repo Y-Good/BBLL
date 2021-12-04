@@ -1,34 +1,39 @@
-import { Controller, Post, Body, UseGuards, Req, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
-import { ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from 'src/entities/user.entity';
+import { query } from 'express';
 
-@ApiTags("用户相关接口")
 @Controller('user')
-export class UserController{
+export class UserController {
   constructor(private readonly userService: UserService, private readonly authService: AuthService) { }
 
-  @ApiOperation({summary:"创建用户"})
   @Post('create')
   create(@Body() createUserDto: CreateUserDto) {
-   this.userService.create(createUserDto);
+    this.userService.createUser(createUserDto);
   }
 
-  @ApiOperation({summary:"用户登录"})
-  @ApiBody({type:LoginUserDto})
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Req() req:any) {
+  login(@Req() req: any) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get()
-  findAll(@Req() req){
-    // return req;
+  @Post('update')
+  async update(@Body() updateUserDto: UpdateUserDto) {
+    if (updateUserDto) await this.userService.updateUser(updateUserDto);
+  }
+
+  @Get("search")
+  async search(@Query() query:any) {
+    console.log(query.key);
+    return await this.userService.searchUser(query.key);
   }
 
 }

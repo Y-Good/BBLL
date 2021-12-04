@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await MyApp();
 
   await app.listen(3000, () => {
-    new LiveService().startLiveService();
-    Logger.log("文档接口：http://localhost:3000/api")
+    // new LiveService().startLiveService();
+    Logger.log("http://localhost:3000")
   });
 }
 bootstrap();

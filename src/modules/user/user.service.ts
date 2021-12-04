@@ -1,9 +1,10 @@
-import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,7 @@ export class UserService {
     private readonly userRepository: Repository<User>
   ) { }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
       return await this.userRepository.save(createUserDto);
     } catch (error) {
@@ -20,7 +21,7 @@ export class UserService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto) {
+  async loginUser(loginUserDto: LoginUserDto) {
     return "12";
   }
 
@@ -33,14 +34,29 @@ export class UserService {
   }
 
   async findUserId(number: string): Promise<User> {
-    if (number) {
-      const res: User = await this.userRepository.findOne({ where: { number: number } });
-      if (res == null) throw new HttpException("数据有误", 4001);
-      return res;
-    }
+    return await this.userRepository.findOne({ where: { number: number } });
   }
+
   ///查询用户名、number是否存在
   async findUserByNumberAndNickname(number: string): Promise<User> {
     return await this.userRepository.findOne({ where: { number: number } });
+  }
+
+  ///修改用户信息
+  async updateUser(updateUserDto: UpdateUserDto): Promise<User> {
+    try {
+      return await this.userRepository.save(updateUserDto);
+    } catch (error) {
+      throw new ConflictException(error);
+    }
+  }
+
+  ///用户搜索
+  async searchUser(key: string): Promise<User[]> {
+    try {
+      return await this.userRepository.find({nickname:Like(`%${key}%`)});
+    } catch (error) {
+      throw new ConflictException(error);
+    }
   }
 }
