@@ -28,4 +28,6 @@ export class Video extends Time {
     @Column({ comment: '视频url地址' })
     url: string;
 
+    @Column({comment:"视频封面"})
+    cover:string;
 }

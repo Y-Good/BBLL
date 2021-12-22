@@ -7,7 +7,7 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() createVideoDto: CreateVideoDto) {
     return this.videoService.create(createVideoDto);
   }

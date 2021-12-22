@@ -32,8 +32,12 @@ export class UserController {
 
   @Get("search")
   async search(@Query() query:any) {
-    console.log(query.key);
     return await this.userService.searchUser(query.key);
+  }
+
+  @Get('all')
+  async getAllUserList(){
+    return await this.userService.findAll();
   }
 
 }

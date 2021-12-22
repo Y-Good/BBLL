@@ -10,6 +10,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus()
     const message = exception.message
 
+    if (request.url == '/') return;
+
     Logger.log(`${request.url} - ${message}`, '非正常接口请求')
 
     response.status(status).json({

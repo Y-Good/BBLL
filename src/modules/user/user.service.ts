@@ -54,9 +54,14 @@ export class UserService {
   ///用户搜索
   async searchUser(key: string): Promise<User[]> {
     try {
-      return await this.userRepository.find({nickname:Like(`%${key}%`)});
+      return await this.userRepository.find({ nickname: Like(`%${key}%`) });
     } catch (error) {
       throw new ConflictException(error);
     }
+  }
+
+  ///所有用户
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 }
