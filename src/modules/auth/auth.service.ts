@@ -24,6 +24,7 @@ export class AuthService {
   }
 
   async login(loginUser: LoginUserDto): Promise<any> {
+
     if (!loginUser.number) return;
     const { id, number } = await this.userService.findUserId(loginUser.number);
     if (!id || !number) throw new InternalServerErrorException("数据为空");

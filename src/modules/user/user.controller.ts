@@ -1,13 +1,11 @@
-import { Controller, Post, Body, UseGuards, Req, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, Query, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from 'src/entities/user.entity';
-import { query } from 'express';
+import { UpdatePwd } from './dto/pwd-user.dto';
+import { CurrentUser } from 'src/common/decorators/current.user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -31,13 +29,32 @@ export class UserController {
   }
 
   @Get("search")
-  async search(@Query() query:any) {
+  async search(@Query() query: any) {
     return await this.userService.searchUser(query.key);
   }
 
-  @Get('all')
-  async getAllUserList(){
+  @Get()
+  async getAllUserList() {
     return await this.userService.findAll();
   }
+
+
+  ///修改密码
+  @Post('updatePwd')
+  async updatePwd(@Body() updatePwd: UpdatePwd) {
+    return await this.userService.updatePwd(updatePwd);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('dianzan')
+ async dianzan(@Query('videoId') videoId,@CurrentUser() user){
+    // this.userService.dianzan(user.id,videoId);
+    return await this.userService.findDianzan(videoId)
+  }
+
+
+
+
+  ///忘记密码
 
 }

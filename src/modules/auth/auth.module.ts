@@ -12,7 +12,7 @@ import { LocalStrategy } from './local.strategy';
   imports: [UserModule, PassportModule, JwtModule.register({
     secret: jwtContants.secret,
     signOptions:{
-      expiresIn: '15d',
+      expiresIn: '30d',
     }
   }),],
   providers: [AuthService, LocalStrategy,JwtStrategy],

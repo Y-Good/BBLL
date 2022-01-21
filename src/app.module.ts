@@ -1,14 +1,15 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RegisterMiddleware } from './middlewares/register.middleware';
+import { RegisterMiddleware } from './common/middlewares/register.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { FileModule } from './modules/file/file.module';
 import { VideoModule } from './modules/video/video.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UserModule, VideoModule, AuthModule, FileModule],
+  imports: [TypeOrmModule.forRoot(), UserModule, VideoModule, AuthModule, FileModule, CommentModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

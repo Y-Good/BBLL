@@ -1,9 +1,9 @@
 import { CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 export class Time {
-    @CreateDateColumn()
+    @CreateDateColumn({select:false})
     createDate: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({select:false})
     updateDate: Date;
 }

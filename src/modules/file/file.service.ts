@@ -7,9 +7,7 @@ const date = moment(new Date()).format("YYYY-MM-DD");
 
 @Injectable()
 export class FileService {
-    async saveVideo(file:any){
-        console.log(date);
-        
+    async saveVideo(file:any){        
         const writeImage = createWriteStream(join(__dirname, '..',`../../public/videos/${date}`, `${file.originalname}`))
         writeImage.write(file.buffer)
     }

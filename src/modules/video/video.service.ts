@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { OmitType } from '@nestjs/mapped-types';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
+import { UserService } from '../user/user.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 
@@ -9,26 +12,39 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 export class VideoService {
   constructor(
     @InjectRepository(Video)
-    private readonly videoRepository: Repository<Video>
-    ) { }
+    private readonly videoRepository: Repository<Video>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) { }
 
   async create(createVideoDto: CreateVideoDto) {
     return await this.videoRepository.save(createVideoDto);
   }
 
-  findAll() {
-    return `This action returns all video`;
+  async findAll(): Promise<Video[]> {
+    return await this.videoRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} video`;
+  async update(vid: number, upId: number, updateVideoDto: UpdateVideoDto) {
+    let video = await this.videoRepository.findOne({ where: [{ id: vid }, { upId: upId }] });
+    return await this.videoRepository.save(video);
   }
 
-  update(id: number, updateVideoDto: UpdateVideoDto) {
-    return `This action updates a #${id} video`;
-  }
+  ///创建点赞
+  async thumbUp(videoId: number, userId: number) {
+    try {
+      let user = await this.userRepository.findOne(userId);
+      let video = await this.videoRepository.findOne(videoId, { relations: ['users'] });
 
-  remove(id: number) {
-    return `This action removes a #${id} video`;
+      video.users.push(user);
+      return await this.videoRepository.save(video)
+    } catch (error) {
+      throw '操作失败';
+    }
+
+  }
+  ///点赞列表
+  async getThumbUpList(videoId: number) {
+    return await this.videoRepository.find({ relations: ['users'], where: { id: videoId } });
   }
 }

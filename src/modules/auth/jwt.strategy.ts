@@ -15,19 +15,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } as StrategyOptions);
   }
 
-
-  
   async validate(payload: any): Promise<any> {
-    let date = new Date().getTime();
-    if (payload.exp * 1000 < date) {
-      throw new HttpException({
-        error: 'token过期',
-        statusbar: HttpStatus.FORBIDDEN
-      }, 403)
-    } else {
-
       //payload：jwt-passport认证jwt通过后解码的结果
-      return { number: payload.number};
-    }
+      return { id:payload.id, number: payload.number};
   }
 }

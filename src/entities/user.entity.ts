@@ -1,6 +1,7 @@
-import { ApiOperation, ApiProperty, ApiPropertyOptional, ApiQuery } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Time } from "./common.entity";
+import { Video } from "./video.entity";
+import { Comment } from "./comment.entity";
 
 @Entity({ name: 'user' })
 export class User extends Time {
@@ -30,4 +31,12 @@ export class User extends Time {
 
     @Column({ comment: '0超级管理员1普通', default: 1 })
     type: number;
+
+    @ManyToMany((type)=>Video,(video) => video.users)
+    @JoinTable()
+    videos:Video[]
+
+    @OneToMany((type)=>Comment,(comment) => comment)
+    comments:Comment[]
+
 }

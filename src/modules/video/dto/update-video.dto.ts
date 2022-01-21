@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateVideoDto } from './create-video.dto';
+import { Video } from 'src/entities/video.entity';
 
-export class UpdateVideoDto extends PartialType(CreateVideoDto) {}
+export class UpdateVideoDto extends Video {}

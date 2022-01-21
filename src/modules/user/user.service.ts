@@ -1,16 +1,21 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
+import { Video } from 'src/entities/video.entity';
+import { compares, encrypt } from 'src/utils/common.utils';
 import { Like, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdatePwd } from './dto/pwd-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Video)
+    private readonly videoRepository: Repository<Video>
   ) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -64,4 +69,45 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
+
+  ///修改密码
+  async updatePwd(updatePwd: UpdatePwd) {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where('user.id=:id', { id: updatePwd.id })
+        .getOne();
+
+      const result = await compares(updatePwd.oldPwd, user.password);
+
+      if (result) {
+        user.password = await encrypt(updatePwd.newPwd);
+        await this.userRepository.save(user);
+        return "修改成功";
+      } else {
+        throw '旧密码错误';
+      }
+
+    } catch (error) {
+      throw new ConflictException(error);
+    }
+  }
+
+  async dianzan(userId: number, videoId: number) {
+    let user = await this.userRepository.findOne(userId)
+    // let video=await this.videoRepository.find({where:{id:videoId}})
+    let video = await this.videoRepository.findOne(videoId)
+
+    user.videos.push(video)
+    this.userRepository.save(user)
+  }
+
+  async findDianzan(videoId: number) {
+    return await this.videoRepository.createQueryBuilder('video')
+      .where('video.id=:id', { id: videoId })
+      .leftJoinAndSelect('video.users', 'u')
+      .getMany()
+  }
+
 }
