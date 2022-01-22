@@ -6,10 +6,19 @@ import { UserModule } from './modules/user/user.module';
 import { FileModule } from './modules/file/file.module';
 import { VideoModule } from './modules/video/video.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { CollectionModule } from './modules/collect/collect.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UserModule, VideoModule, AuthModule, FileModule, CommentModule],
+  imports: [
+    TypeOrmModule.forRoot(),
+    UserModule,
+    VideoModule,
+    AuthModule,
+    FileModule,
+    CommentModule,
+    CollectionModule
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
