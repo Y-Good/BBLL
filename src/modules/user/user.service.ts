@@ -1,4 +1,5 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
@@ -15,7 +16,8 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Video)
-    private readonly videoRepository: Repository<Video>
+    private readonly videoRepository: Repository<Video>,
+    private readonly jwtService: JwtService,
   ) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -108,6 +110,17 @@ export class UserService {
       .where('video.id=:id', { id: videoId })
       .leftJoinAndSelect('video.users', 'u')
       .getMany()
+  }
+
+   /** 校验 token */
+   verifyToken(token: string): string {
+    try {
+      if (!token) return null
+      const id = this.jwtService.verify(token.replace('Bearer ', ''))
+      return id
+    } catch (error) {
+      return null
+    }
   }
 
 }

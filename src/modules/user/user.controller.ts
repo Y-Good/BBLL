@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePwd } from './dto/pwd-user.dto';
-import { CurrentUser } from 'src/common/decorators/current.user.decorator';
+import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 
 @Controller('user')
 export class UserController {
@@ -22,7 +22,6 @@ export class UserController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('update')
   async update(@Body() updateUserDto: UpdateUserDto) {
     if (updateUserDto) await this.userService.updateUser(updateUserDto);
@@ -47,7 +46,7 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('dianzan')
- async dianzan(@Query('videoId') videoId,@CurrentUser() user){
+  async dianzan(@Query('videoId') videoId, @CurrentUser() user) {
     // this.userService.dianzan(user.id,videoId);
     return await this.userService.findDianzan(videoId)
   }

@@ -3,8 +3,9 @@ import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/common/decorators/current.user.decorator';
+import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { JwtService } from '@nestjs/jwt';
+import { AllowAnon } from 'src/common/decorators/allowAnon.decorator';
 
 @Controller('video')
 export class VideoController {
@@ -26,7 +27,6 @@ export class VideoController {
   }
 
   ///点赞了
-  @UseGuards(AuthGuard('jwt'))
   @Get('thumbUp')
   async thumbUp(@Query('videoId') videoId: number, @CurrentUser() user: any) {
     return await this.videoService.thumbUp(videoId, user.id);

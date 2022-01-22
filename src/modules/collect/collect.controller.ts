@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/common/decorators/current.user.decorator';
+import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { collectEnum } from 'src/common/enums/collect.enum';
 import { CollectService } from './collect.service';
 

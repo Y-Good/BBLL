@@ -7,6 +7,8 @@ import { FileModule } from './modules/file/file.module';
 import { VideoModule } from './modules/video/video.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { CollectModule } from './modules/collect/collect.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/guards/auth.guard';
 
 
 @Module({
@@ -19,6 +21,10 @@ import { CollectModule } from './modules/collect/collect.module';
     CommentModule,
     CollectModule
   ],
+  providers:[
+    {provide: APP_GUARD,
+      useClass: JwtAuthGuard}
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
