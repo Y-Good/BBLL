@@ -8,6 +8,6 @@ export async function encrypt(password: string) {
 }
 
 //密码对比
-export async function compares(password:string,dbpassword:string) {
-    return await bcrypt.compare(password,dbpassword)
+export async function compares(password: string, dbpassword: string) {
+    return await bcrypt.compare(password, dbpassword)
 }

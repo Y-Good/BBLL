@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
-import { UserService } from '../user/user.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 
@@ -35,11 +34,13 @@ export class VideoService {
     try {
       let user = await this.userRepository.findOne(userId);
       let video = await this.videoRepository.findOne(videoId, { relations: ['users'] });
-
+      video.users.map(e => {
+        if (e.id === user.id) throw "点个锤子";
+      })
       video.users.push(user);
       return await this.videoRepository.save(video)
     } catch (error) {
-      throw '操作失败';
+      throw new BadRequestException(error);
     }
 
   }

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateCommentDto } from './dto/create-comment.dto';
 import { Comment } from 'src/entities/comment.entity';
 import { Video } from 'src/entities/video.entity';
 import { User } from 'src/entities/user.entity';
@@ -17,7 +16,6 @@ export class CommentService {
   ) { }
 
    getCommentList(videoId: number) {
-    // return await this.videoRepository.findAndCount({ relations: ['comments','comments.user.id = user.id'], where: { id: videoId } });
     return  this.videoRepository
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.comments', 'comments')
