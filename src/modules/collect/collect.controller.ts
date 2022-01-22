@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/current.user.decorator';
-import { collectTypes } from 'src/common/enums/collect.enum';
+import { collectEnum } from 'src/common/enums/collect.enum';
 import { CollectService } from './collect.service';
 
 @Controller('collect')
@@ -15,7 +15,7 @@ export class CollectController {
     @Query('liveId') liveId: number,
     @CurrentUser() user: any
   ) {
-    let collectType: collectTypes = videoId != null ? collectTypes.VIDEO : collectTypes.LIVE;
+    let collectType: collectEnum = videoId != null ? collectEnum.VIDEO : collectEnum.LIVE;
     let collectId: number = videoId != null ? videoId : liveId;
     return await this.collectService.create(collectId, user.id, collectType);
   }
@@ -32,7 +32,7 @@ export class CollectController {
   @Get('cancel')
   @UseGuards(AuthGuard('jwt'))
   cancelCollect(@Query('videoId') videoId: number, @CurrentUser() user: any) {
-    return this.collectService.cancel(videoId, user.id, collectTypes.VIDEO);
+    return this.collectService.cancel(videoId, user.id, collectEnum.VIDEO);
   }
 
 }

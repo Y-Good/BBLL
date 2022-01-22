@@ -1,4 +1,4 @@
-export enum collectTypes {
+export enum collectEnum {
     VIDEO = 'video',
     LIVE = 'live'
 }

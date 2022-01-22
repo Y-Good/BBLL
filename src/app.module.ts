@@ -6,7 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { FileModule } from './modules/file/file.module';
 import { VideoModule } from './modules/video/video.module';
 import { CommentModule } from './modules/comment/comment.module';
-import { CollectionModule } from './modules/collect/collect.module';
+import { CollectModule } from './modules/collect/collect.module';
 
 
 @Module({
@@ -17,7 +17,7 @@ import { CollectionModule } from './modules/collect/collect.module';
     AuthModule,
     FileModule,
     CommentModule,
-    CollectionModule
+    CollectModule
   ],
 })
 export class AppModule implements NestModule {

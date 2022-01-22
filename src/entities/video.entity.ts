@@ -3,7 +3,7 @@ import { Comment } from './comment.entity';
 import { Time } from './common.entity'
 import { User } from './user.entity';
 
-@Entity({ name: 'video' })
+@Entity('video')
 export class Video extends Time {
 
     @PrimaryGeneratedColumn({ comment: '主键，自增' })

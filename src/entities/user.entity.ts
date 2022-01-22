@@ -3,7 +3,7 @@ import { Time } from "./common.entity";
 import { Video } from "./video.entity";
 import { Comment } from "./comment.entity";
 
-@Entity({ name: 'user' })
+@Entity('user')
 export class User extends Time {
     @PrimaryGeneratedColumn({ comment: '用户ID' })
     id: number;
@@ -32,11 +32,11 @@ export class User extends Time {
     @Column({ comment: '0超级管理员1普通', default: 1 })
     type: number;
 
-    @ManyToMany((type)=>Video,(video) => video.users)
-    @JoinTable()
-    videos:Video[]
+    @ManyToMany((type) => Video, (video) => video.users)
+    @JoinTable({ name: 'thumb_up' })
+    videos: Video[]
 
-    @OneToMany((type)=>Comment,(comment) => comment)
-    comments:Comment[]
+    @OneToMany((type) => Comment, (comment) => comment)
+    comments: Comment[]
 
 }

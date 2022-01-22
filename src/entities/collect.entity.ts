@@ -1,9 +1,9 @@
-import { collectTypes } from 'src/common/enums/collect.enum';
+import { collectEnum } from 'src/common/enums/collect.enum';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Time } from './common.entity'
 import { Video } from './video.entity';
 
-@Entity({ name: 'collect' })
+@Entity('collect')
 export class Collect extends Time {
 
     @PrimaryGeneratedColumn({ comment: '主键，自增' })
@@ -18,8 +18,8 @@ export class Collect extends Time {
     @Column({ comment: '直播id' })
     liveId: number;
 
-    @Column({ comment: '收藏类型', enum: collectTypes, type: 'enum' })
-    type: collectTypes;
+    @Column({ comment: '收藏类型', enum: collectEnum, type: 'enum' })
+    type: collectEnum;
 
     @OneToOne((type) => Video, video => video.id)
     @JoinColumn()

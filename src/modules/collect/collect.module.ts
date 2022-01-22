@@ -10,4 +10,4 @@ import { Video } from 'src/entities/video.entity';
   controllers: [CollectController],
   providers: [CollectService]
 })
-export class CollectionModule {}
+export class CollectModule {}
