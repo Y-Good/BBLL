@@ -29,15 +29,18 @@ export class VideoService {
     return await this.videoRepository.save(video);
   }
 
-  ///创建点赞
+  ///点赞
   async thumbUp(videoId: number, userId: number) {
     try {
       let user = await this.userRepository.findOne(userId);
       let video = await this.videoRepository.findOne(videoId, { relations: ['users'] });
       video.users.map(e => {
-        if (e.id === user.id) throw "点个锤子";
+        e.id === user.id
+          ? video.users.unshift(user)
+          : video.users.push(user);
       })
-      video.users.push(user);
+
+      video.thumbUp = video.users.length;
       return await this.videoRepository.save(video)
     } catch (error) {
       throw new BadRequestException(error);
@@ -47,5 +50,10 @@ export class VideoService {
   ///点赞列表
   async getThumbUpList(videoId: number) {
     return await this.videoRepository.find({ relations: ['users'], where: { id: videoId } });
+  }
+
+  ///排行
+  getVideoRank() {
+    return this.videoRepository.find({ order: { thumbUp: "ASC" } });
   }
 }

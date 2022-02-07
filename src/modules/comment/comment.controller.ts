@@ -15,11 +15,17 @@ export class CommentController {
 
 
   @Get()
-  async getCommentList(@Query('videoId') videoId: number) {    
+  async getCommentList(@Query('videoId') videoId: number) {
     return await this.commentService.getCommentList(videoId);
   }
 
   ///删除评论
 
 
+
+  ///获取我的评论
+  @Get('my')
+  async getMyComment(@CurrentUser() user:any) {
+    return await this.commentService.getMyComment(user.id);
+  }
 }

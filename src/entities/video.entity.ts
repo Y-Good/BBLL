@@ -22,7 +22,7 @@ export class Video extends Time {
     view: number;
 
     @Column({ comment: '点赞数', default: 0 })
-    likes: number;
+    thumbUp: number;
 
     @Column({ comment: '收藏数', default: 0 })
     collections: number;

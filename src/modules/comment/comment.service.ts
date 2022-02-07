@@ -15,13 +15,13 @@ export class CommentService {
     private readonly userRepository: Repository<User>,
   ) { }
 
-   getCommentList(videoId: number) {
-    return  this.videoRepository
+  getCommentList(videoId: number) {
+    return this.videoRepository
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.comments', 'comments')
       .leftJoinAndSelect('comments.user', 'user')
       .where('video.id=:videoId', { videoId: videoId })
-      .getManyAndCount()
+      .getManyAndCount();
   }
 
   ///评论
@@ -35,4 +35,11 @@ export class CommentService {
     return await this.commentRepository.save(comment);
   }
 
+  ///我的评论
+  getMyComment(userId: number) {
+    return this.userRepository.find({
+      relations: ['comments', 'comments.video'],
+      where: { id: userId },
+    });
+  }
 }

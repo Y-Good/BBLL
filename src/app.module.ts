@@ -21,9 +21,11 @@ import { JwtAuthGuard } from './common/guards/auth.guard';
     CommentModule,
     CollectModule
   ],
-  providers:[
-    {provide: APP_GUARD,
-      useClass: JwtAuthGuard}
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    }
   ]
 })
 export class AppModule implements NestModule {

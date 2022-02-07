@@ -6,6 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePwd } from './dto/pwd-user.dto';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
+import { AllowAnon } from 'src/common/decorators/allowAnon.decorator';
 
 @Controller('user')
 export class UserController {
@@ -16,8 +17,9 @@ export class UserController {
     this.userService.createUser(createUserDto);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @AllowAnon()
   @Post('login')
+  @UseGuards(AuthGuard('local'))
   login(@Req() req: any) {
     return this.authService.login(req.user);
   }

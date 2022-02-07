@@ -36,7 +36,7 @@ export class User extends Time {
     @JoinTable({ name: 'thumb_up' })
     videos: Video[]
 
-    @OneToMany((type) => Comment, (comment) => comment)
+    @OneToMany((type) => Comment, (comment) => comment.user)
     comments: Comment[]
 
 }

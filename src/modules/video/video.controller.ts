@@ -37,4 +37,12 @@ export class VideoController {
   async getThumbUpList(@Query('videoId') videoId: number,) {
     return await this.videoService.getThumbUpList(videoId);
   }
+
+
+  ///视频排行
+  @Get('rank')
+  @AllowAnon()
+  async  getVideoRank() {
+    return await this.videoService.getVideoRank();
+  }
 }
