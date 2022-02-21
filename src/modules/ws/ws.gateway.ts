@@ -38,7 +38,7 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayD
   }
 
   @WebSocketServer() wss: Server;
-  @SubscribeMessage('msg')
+  // @SubscribeMessage('msg')
   async handleMessage(@ConnectedSocket() socket: Socket, @MessageBody() data: any) {
     console.log(data);
     console.log(socket);

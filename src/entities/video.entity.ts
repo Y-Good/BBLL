@@ -46,4 +46,7 @@ export class Video extends Time {
     @ManyToMany(() => Tag, (tag) => tag.videos)
     @JoinTable({ name: 'video_tag' })
     tags: Tag[];
+
+    @ManyToMany((type) => User, (user) => user.historyVideos)
+    historyUsers: User[]
 }

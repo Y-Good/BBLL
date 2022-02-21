@@ -8,11 +8,12 @@ import { jwtContants } from '../auth/jwt.contants';
 import { JwtModule } from '@nestjs/jwt';
 import { TagModule } from '../tag/tag.module';
 import { Tag } from 'src/entities/tag.entity';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Video,User,Tag]),JwtModule.register({
+  imports: [TypeOrmModule.forFeature([Video, User, Tag]), UserModule, JwtModule.register({
     secret: jwtContants.secret,
-    signOptions:{
+    signOptions: {
       expiresIn: '30d',
     }
   })],

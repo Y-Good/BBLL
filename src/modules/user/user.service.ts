@@ -12,6 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -112,8 +113,8 @@ export class UserService {
       .getMany()
   }
 
-   /** 校验 token */
-   verifyToken(token: string): string {
+  /** 校验 token */
+  verifyToken(token: string): string {
     try {
       if (!token) return null
       const id = this.jwtService.verify(token.replace('Bearer ', ''))
@@ -121,6 +122,27 @@ export class UserService {
     } catch (error) {
       return null
     }
+  }
+
+  async createHistory(videoId: any, userId: any) {
+    let user = await this.userRepository.find({
+      where: { 'id': userId },
+      relations: ['historyVideos'],
+    });
+    // let video=await this.videoRepository.find({where:{id:videoId}})
+    let historyVideos = await this.videoRepository.findOne(videoId)
+
+    user[0].historyVideos.push(historyVideos)
+    console.log(user);
+
+    this.userRepository.save(user)
+  }
+
+  async getUserInfo(userId: number) {
+    return await this.userRepository.find({
+      where: { 'id': userId },
+      relations: ['historyVideos'],
+    });
   }
 
 }

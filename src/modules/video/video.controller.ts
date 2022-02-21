@@ -1,18 +1,19 @@
-import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Query, Param } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { AllowAnon } from 'src/common/decorators/allowAnon.decorator';
+import { UserService } from '../user/user.service';
 
 
 @Controller('video')
 export class VideoController {
-  constructor(private readonly videoService: VideoService) { }
+  constructor(private readonly videoService: VideoService, private readonly userService: UserService) { }
 
   @Post('create')
-  create(@Body() createVideoDto: CreateVideoDto,@CurrentUser() user:any) {
-    return this.videoService.create(createVideoDto,user.id);
+  create(@Body() createVideoDto: CreateVideoDto, @CurrentUser() user: any) {
+    return this.videoService.create(createVideoDto, user.id);
   }
 
   @Get()
@@ -41,7 +42,16 @@ export class VideoController {
   ///视频排行
   @Get('rank')
   @AllowAnon()
-  async  getVideoRank() {
+  async getVideoRank() {
     return await this.videoService.getVideoRank();
+  }
+
+  @Get(':id')
+  async getVideoInfo(@Param() params, @CurrentUser() user: any) {
+    const videoId = params
+    const userId = user.id;
+    await this.videoService.getVideoInfo(videoId);
+    await this.userService.createHistory(videoId, userId);
+    return await this.userService.getUserInfo(userId)
   }
 }

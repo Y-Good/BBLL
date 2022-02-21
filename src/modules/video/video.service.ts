@@ -10,6 +10,7 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 
 @Injectable()
 export class VideoService {
+
   constructor(
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
@@ -63,5 +64,9 @@ export class VideoService {
   ///排行
   getVideoRank() {
     return this.videoRepository.find({ order: { thumbUp: "ASC" } });
+  }
+
+  async getVideoInfo(videoId: any) {
+    return await this.videoRepository.findOne(videoId);
   }
 }

@@ -39,4 +39,9 @@ export class User extends Time {
     @OneToMany((type) => Comment, (comment) => comment.user)
     comments: Comment[]
 
+    @ManyToMany((type) => Video, (video) => video.historyUsers)
+    @JoinTable({ name: 'history' })
+    historyVideos: Video[]
+
+
 }
