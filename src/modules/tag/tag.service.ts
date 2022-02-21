@@ -19,8 +19,11 @@ export class TagService {
     }
 
     ///获取标签
-    async findAllTag() {
-        return await this.tagRepository.find();
+    async findAllTag(ids?: number[]) {
+        if (ids.length == 0) {
+            return await this.tagRepository.find();
+        }
+        return await this.tagRepository.findByIds(ids);
     }
 
     ///删除标签---好像用不到

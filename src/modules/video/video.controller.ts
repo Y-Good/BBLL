@@ -2,18 +2,17 @@ import { Controller, Get, Post, Body, UseGuards, Query } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
-import { JwtService } from '@nestjs/jwt';
 import { AllowAnon } from 'src/common/decorators/allowAnon.decorator';
+
 
 @Controller('video')
 export class VideoController {
-  constructor(private readonly videoService: VideoService, private readonly jwtService: JwtService) { }
+  constructor(private readonly videoService: VideoService) { }
 
   @Post('create')
-  create(@Body() createVideoDto: CreateVideoDto) {
-    return this.videoService.create(createVideoDto);
+  create(@Body() createVideoDto: CreateVideoDto,@CurrentUser() user:any) {
+    return this.videoService.create(createVideoDto,user.id);
   }
 
   @Get()

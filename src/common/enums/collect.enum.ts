@@ -1,4 +1,5 @@
 export enum collectEnum {
     VIDEO = 'video',
-    LIVE = 'live'
+    LIVE = 'live',
+    USER = 'user'
 }

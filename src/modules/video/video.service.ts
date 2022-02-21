@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { OmitType } from '@nestjs/mapped-types';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Tag } from 'src/entities/tag.entity';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
@@ -14,10 +15,17 @@ export class VideoService {
     private readonly videoRepository: Repository<Video>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
   ) { }
 
-  async create(createVideoDto: CreateVideoDto) {
-    return await this.videoRepository.save(createVideoDto);
+  async create(createVideoDto: CreateVideoDto, id: number) {
+    createVideoDto.upId = id;
+    const { tags: oldTag, ...newDto } = createVideoDto;
+    let tags: Tag[] = await this.tagRepository.findByIds(createVideoDto.tags);
+    let video = { tags, ...newDto };
+
+    return await this.videoRepository.save(video);
   }
 
   async findAll(): Promise<Video[]> {

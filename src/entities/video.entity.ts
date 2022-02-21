@@ -43,7 +43,7 @@ export class Video extends Time {
     @OneToMany(() => Comment, comment => comment.video)
     comments: Comment[];
 
-    @ManyToMany(()=>Tag,(tag)=>tag.videos)
+    @ManyToMany(() => Tag, (tag) => tag.videos)
     @JoinTable({ name: 'video_tag' })
-    tags:Tag[];
+    tags: Tag[];
 }

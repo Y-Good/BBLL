@@ -20,7 +20,7 @@ export class CollectController {
   }
 
 
-  ///获取用户收藏列表
+  ///获取用户收藏列表或者关注
   @Get('list')
   async getCollectList(@Query('type') type: string, @CurrentUser() user: any) {
     return await this.collectService.findByType(type, user.id);
