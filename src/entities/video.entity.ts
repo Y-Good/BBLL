@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Comment } from './comment.entity';
 import { Time } from './common.entity'
+import { Tag } from './tag.entity';
 import { User } from './user.entity';
 
 @Entity('video')
@@ -16,7 +17,7 @@ export class Video extends Time {
     title: string;
 
     @Column({ comment: '视频分类' })
-    class: number;
+    category: number;
 
     @Column({ comment: '观看次数', default: 0 })
     view: number;
@@ -41,4 +42,8 @@ export class Video extends Time {
 
     @OneToMany(() => Comment, comment => comment.video)
     comments: Comment[];
+
+    @ManyToMany(()=>Tag,(tag)=>tag.videos)
+    @JoinTable({ name: 'video_tag' })
+    tags:Tag[];
 }

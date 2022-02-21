@@ -9,7 +9,6 @@ export class CollectController {
   constructor(private readonly collectService: CollectService) { }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   async createCollect(
     @Query('videoId') videoId: number,
     @Query('liveId') liveId: number,
@@ -23,14 +22,12 @@ export class CollectController {
 
   ///获取用户收藏列表
   @Get('list')
-  @UseGuards(AuthGuard('jwt'))
   async getCollectList(@Query('type') type: string, @CurrentUser() user: any) {
     return await this.collectService.findByType(type, user.id);
   }
 
   ///取消收藏
   @Get('cancel')
-  @UseGuards(AuthGuard('jwt'))
   cancelCollect(@Query('videoId') videoId: number, @CurrentUser() user: any) {
     return this.collectService.cancel(videoId, user.id, collectEnum.VIDEO);
   }

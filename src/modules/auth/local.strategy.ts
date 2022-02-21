@@ -20,7 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
             return user;
         }
         else {
-            throw new ConflictException('密码错误');
+            throw new ConflictException('账号或密码错误');
         }
     }
 }
