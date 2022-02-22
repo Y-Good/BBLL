@@ -58,7 +58,7 @@ export class VideoService {
   }
   ///点赞列表
   async getThumbUpList(videoId: number) {
-    return await this.videoRepository.find({ relations: ['users'], where: { id: videoId } });
+    return await this.videoRepository.findOne({ relations: ['users'], where: { 'id': videoId } });
   }
 
   ///排行
@@ -66,7 +66,12 @@ export class VideoService {
     return this.videoRepository.find({ order: { thumbUp: "ASC" } });
   }
 
+  ///获取视频信息
   async getVideoInfo(videoId: any) {
-    return await this.videoRepository.findOne(videoId);
+    let video = await this.videoRepository.findOne({ where: { 'id': videoId }, relations: ['historyUsers'] });
+    video.view = video.historyUsers.length;
+    this.videoRepository.save(video);
+
+    return video;
   }
 }

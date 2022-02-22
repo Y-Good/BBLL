@@ -7,18 +7,20 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePwd } from './dto/pwd-user.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
+import { ReqUser } from 'src/common/interfaces/req-user.interface';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService, private readonly authService: AuthService) { }
 
   @Post('create')
-  create(@Body() createUserDto: CreateUserDto) {
-    this.userService.createUser(createUserDto);
+  @AllowAnon()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.createUser(createUserDto);
   }
 
-  @AllowAnon()
   @Post('login')
+  @AllowAnon()
   @UseGuards(AuthGuard('local'))
   login(@Req() req: any) {
     return this.authService.login(req.user);
@@ -41,9 +43,9 @@ export class UserController {
 
 
   ///修改密码
-  @Post('updatePwd')
-  async updatePwd(@Body() updatePwd: UpdatePwd) {
-    return await this.userService.updatePwd(updatePwd);
+  @Post('update.pwd')
+  async updatePwd(@Body() updatePwd: UpdatePwd, @CurrentUser() user: ReqUser) {
+    return await this.userService.updatePwd(updatePwd, user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))

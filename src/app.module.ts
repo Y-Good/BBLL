@@ -11,7 +11,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/auth.guard';
 import { TagModule } from './modules/tag/tag.module';
 import { WsModule } from './modules/ws/ws.module';
-import { HistoryModule } from './modules/history/history.module';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { HistoryModule } from './modules/history/history.module';
     CollectModule,
     TagModule,
     WsModule,
-    HistoryModule,
   ],
   providers: [
     {

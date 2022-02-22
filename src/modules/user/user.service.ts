@@ -21,16 +21,13 @@ export class UserService {
     private readonly jwtService: JwtService,
   ) { }
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto) {
     try {
-      return await this.userRepository.save(createUserDto);
+      let res = await this.userRepository.save(createUserDto);
+      return res != null;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-  }
-
-  async loginUser(loginUserDto: LoginUserDto) {
-    return "12";
   }
 
   async findPassword(number: string): Promise<User> {
@@ -74,12 +71,12 @@ export class UserService {
   }
 
   ///修改密码
-  async updatePwd(updatePwd: UpdatePwd) {
+  async updatePwd(updatePwd: UpdatePwd,userId:number) {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
         .addSelect('user.password')
-        .where('user.id=:id', { id: updatePwd.id })
+        .where('user.id=:id', { id: userId })
         .getOne();
 
       const result = await compares(updatePwd.oldPwd, user.password);
@@ -87,7 +84,7 @@ export class UserService {
       if (result) {
         user.password = await encrypt(updatePwd.newPwd);
         await this.userRepository.save(user);
-        return "修改成功";
+        return true;
       } else {
         throw '旧密码错误';
       }
@@ -125,15 +122,13 @@ export class UserService {
   }
 
   async createHistory(videoId: any, userId: any) {
-    let user = await this.userRepository.find({
+    let user = await this.userRepository.findOne({
       where: { 'id': userId },
       relations: ['historyVideos'],
     });
-    // let video=await this.videoRepository.find({where:{id:videoId}})
-    let historyVideos = await this.videoRepository.findOne(videoId)
+    let video = await this.videoRepository.findOne(videoId)
 
-    user[0].historyVideos.push(historyVideos)
-    console.log(user);
+    user.historyVideos.push(video)
 
     this.userRepository.save(user)
   }

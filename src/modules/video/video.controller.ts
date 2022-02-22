@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Query, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Query, Param, Request } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
@@ -50,11 +50,10 @@ export class VideoController {
 
   ///获取视频信息
   @Get(':id')
-  async getVideoInfo(@Param() params:any, @CurrentUser() user: ReqUser) {
-    const videoId = params
+  async getVideoInfo(@Param() params: any, @CurrentUser() user: ReqUser) {
+    const videoId = params.id;
     const userId = user.id;
-    await this.videoService.getVideoInfo(videoId);
-    await this.userService.createHistory(videoId, userId);
-    return await this.userService.getUserInfo(userId)
+    this.userService.createHistory(videoId, userId);
+    return await this.videoService.getVideoInfo(videoId);
   }
 }
