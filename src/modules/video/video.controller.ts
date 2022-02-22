@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, UseGuards, Query, Param } from '@nestjs/co
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
-import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
-import { AllowAnon } from 'src/common/decorators/allowAnon.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 import { UserService } from '../user/user.service';
+import { ReqUser } from 'src/common/interfaces/req-user.interface';
 
 
 @Controller('video')
@@ -46,8 +47,10 @@ export class VideoController {
     return await this.videoService.getVideoRank();
   }
 
+
+  ///获取视频信息
   @Get(':id')
-  async getVideoInfo(@Param() params, @CurrentUser() user: any) {
+  async getVideoInfo(@Param() params:any, @CurrentUser() user: ReqUser) {
     const videoId = params
     const userId = user.id;
     await this.videoService.getVideoInfo(videoId);

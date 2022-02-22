@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
 import { ExecutionContext, ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { UserService } from 'src/modules/user/user.service'
-import { ALLOW_ANON } from '../decorators/allowAnon.decorator'
+import { ALLOW_ANON } from '../decorators/allow-anon.decorator'
 
 
 

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { CommentService } from './comment.service';
 
 @Controller('comment')

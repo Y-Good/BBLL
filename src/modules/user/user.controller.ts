@@ -5,8 +5,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePwd } from './dto/pwd-user.dto';
-import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
-import { AllowAnon } from 'src/common/decorators/allowAnon.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 
 @Controller('user')
 export class UserController {
