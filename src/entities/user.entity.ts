@@ -32,13 +32,20 @@ export class User extends Time {
     @Column({ comment: '0超级管理员1普通', default: 1 })
     type: number;
 
+    ///视频
+    @OneToMany(() => Video,(video)=>video.user)
+    videos: Video[]
+    
+    ///点赞
     @ManyToMany((type) => Video, (video) => video.users)
     @JoinTable({ name: 'thumb_up' })
-    videos: Video[]
+    thumbUp: Video[]
 
+    ///评论
     @OneToMany((type) => Comment, (comment) => comment.user)
     comments: Comment[]
 
+    ///历史记录
     @ManyToMany((type) => Video, (video) => video.historyUsers)
     @JoinTable({ name: 'history' })
     historyVideos: Video[]

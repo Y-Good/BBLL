@@ -99,7 +99,7 @@ export class UserService {
     // let video=await this.videoRepository.find({where:{id:videoId}})
     let video = await this.videoRepository.findOne(videoId)
 
-    user.videos.push(video)
+    user.thumbUp.push(video)
     this.userRepository.save(user)
   }
 

@@ -14,7 +14,7 @@ export class TagService {
     ///用户自定义标签
     createTag(tagName: string) {
         let tag = new Tag();
-        tag.tag = tagName;
+        tag.name = tagName;
         return this.tagRepository.save(tag);
     }
 
@@ -30,4 +30,10 @@ export class TagService {
     removeTag() {
 
     }
+
+    ///获取视频标签
+    // async getVideoTag(videoId:number){
+    //     // return await this.
+
+    // }
 }

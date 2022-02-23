@@ -7,7 +7,7 @@ export class Tag {
     id: number;
 
     @Column()
-    tag: string;
+    name: string;
 
     @ManyToMany(()=>Video,(video)=>video.tags)
     videos:Video[];

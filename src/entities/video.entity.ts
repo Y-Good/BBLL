@@ -37,7 +37,12 @@ export class Video extends Time {
     @Column({ comment: "视频封面", default: null })
     cover: string;
 
-    @ManyToMany(() => User, (user) => user.videos)
+    ///视频
+    @ManyToOne(() => User)
+    user: User;
+
+    ///点赞
+    @ManyToMany(() => User, (user) => user.thumbUp)
     users: User[];
 
     @OneToMany(() => Comment, comment => comment.video)

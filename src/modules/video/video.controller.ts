@@ -18,6 +18,7 @@ export class VideoController {
   }
 
   @Get()
+  @AllowAnon()
   findAll() {
     return this.videoService.findAll();
   }
