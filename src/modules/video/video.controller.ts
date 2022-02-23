@@ -23,10 +23,10 @@ export class VideoController {
     return this.videoService.findAll();
   }
 
-  @Post('update')
-  async update(@Body() videoUpdateDto: UpdateVideoDto) {
-    return await this.videoService.update(videoUpdateDto.id, videoUpdateDto.upId, videoUpdateDto);
-  }
+  // @Post('update')
+  // async update(@Body() videoUpdateDto: UpdateVideoDto) {
+  //   return await this.videoService.update(videoUpdateDto.id, videoUpdateDto);
+  // }
 
   ///点赞了
   @Get('thumbUp')

@@ -10,9 +10,6 @@ export class Video extends Time {
     @PrimaryGeneratedColumn({ comment: '主键，自增' })
     id: number;
 
-    @Column({ comment: '发布者id' })
-    upId: number;
-
     @Column({ comment: '视频标题' })
     title: string;
 

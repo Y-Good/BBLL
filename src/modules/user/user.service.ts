@@ -71,7 +71,7 @@ export class UserService {
   }
 
   ///修改密码
-  async updatePwd(updatePwd: UpdatePwd,userId:number) {
+  async updatePwd(updatePwd: UpdatePwd, userId: number) {
     try {
       const user = await this.userRepository
         .createQueryBuilder('user')
@@ -92,22 +92,6 @@ export class UserService {
     } catch (error) {
       throw new ConflictException(error);
     }
-  }
-
-  async dianzan(userId: number, videoId: number) {
-    let user = await this.userRepository.findOne(userId)
-    // let video=await this.videoRepository.find({where:{id:videoId}})
-    let video = await this.videoRepository.findOne(videoId)
-
-    user.thumbUp.push(video)
-    this.userRepository.save(user)
-  }
-
-  async findDianzan(videoId: number) {
-    return await this.videoRepository.createQueryBuilder('video')
-      .where('video.id=:id', { id: videoId })
-      .leftJoinAndSelect('video.users', 'u')
-      .getMany()
   }
 
   /** 校验 token */
@@ -138,6 +122,33 @@ export class UserService {
       where: { 'id': userId },
       relations: ['historyVideos'],
     });
+  }
+
+  ///关注
+  async getFollowList(userId: number) {
+    return await this.userRepository.findOne({ relations: ['follows'], where: { id: userId } })
+  }
+
+  ///创建、取消关注
+  async createAndCancelFollow(userId: number, followId: number) {
+    let user1 = await this.userRepository.findOne(userId, { relations: ['follows'] });
+    let user2 = await this.userRepository.findOne(followId);
+    let followIndex: number = -1;
+
+    user1.follows.forEach((e, index) => {
+      if (e.id == user2.id) {
+        followIndex = index;
+        return;
+      }
+    })
+
+    if (followIndex != -1) {
+      delete user1.follows[followIndex];
+    } else {
+      user1.follows.push(user2);
+    }
+    let res = await this.userRepository.save(user1);
+    if (res != null) return true;
   }
 
 }

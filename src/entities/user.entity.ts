@@ -17,6 +17,9 @@ export class User extends Time {
     @Column({ comment: '昵称' })
     nickname: string;
 
+    @Column({ comment: '签名', length: 50, default: null })
+    signature: string;
+
     @Column({ comment: '头像', default: null })
     avatar: string;
 
@@ -33,9 +36,9 @@ export class User extends Time {
     type: number;
 
     ///视频
-    @OneToMany(() => Video,(video)=>video.user)
+    @OneToMany(() => Video, (video) => video.user)
     videos: Video[]
-    
+
     ///点赞
     @ManyToMany((type) => Video, (video) => video.users)
     @JoinTable({ name: 'thumb_up' })
@@ -50,5 +53,9 @@ export class User extends Time {
     @JoinTable({ name: 'history' })
     historyVideos: Video[]
 
+    ///关注的人
+    @ManyToMany((type) => User, (user) => user.follows)
+    @JoinTable({ name: 'follow', joinColumn: { name: 'userId' }, inverseJoinColumn: { name: 'followId' } })
+    follows: User[]
 
 }

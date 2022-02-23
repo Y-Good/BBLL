@@ -8,6 +8,7 @@ import { UpdatePwd } from './dto/pwd-user.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 import { ReqUser } from 'src/common/interfaces/req-user.interface';
+import { FollowUserDto } from './dto/follow-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -47,17 +48,18 @@ export class UserController {
   async updatePwd(@Body() updatePwd: UpdatePwd, @CurrentUser() user: ReqUser) {
     return await this.userService.updatePwd(updatePwd, user.id);
   }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('dianzan')
-  async dianzan(@Query('videoId') videoId, @CurrentUser() user) {
-    // this.userService.dianzan(user.id,videoId);
-    return await this.userService.findDianzan(videoId)
-  }
-
-
-
-
   ///忘记密码
 
+
+  ///获取关注
+  @Get('follow')
+  // @AllowAnon()
+  async getMyFollow(@CurrentUser() user: ReqUser) {
+    return await this.userService.getFollowList(user.id);
+  }
+
+  @Post('follow')
+  async createAndCancelFollow(@CurrentUser() user: ReqUser, @Body() followUserDto: FollowUserDto) {
+    return await this.userService.createAndCancelFollow(user.id, followUserDto.followId);
+  }
 }

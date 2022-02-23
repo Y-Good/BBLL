@@ -38,10 +38,10 @@ export class VideoService {
     .getMany();
   }
 
-  async update(vid: number, upId: number, updateVideoDto: UpdateVideoDto) {
-    let video = await this.videoRepository.findOne({ where: [{ id: vid }, { upId: upId }] });
-    return await this.videoRepository.save(video);
-  }
+  // async update(vid: number, upId: number, updateVideoDto: UpdateVideoDto) {
+  //   let video = await this.videoRepository.findOne({ where: [{ id: vid }, { upId: upId }] });
+  //   return await this.videoRepository.save(video);
+  // }
 
   ///点赞
   async thumbUp(videoId: number, userId: number) {
