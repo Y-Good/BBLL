@@ -70,6 +70,13 @@ export class UserService {
     return await this.userRepository.find();
   }
 
+
+  ///个人信息
+  async getProfile(userId: number) {
+    let res = await this.userRepository.findOne(userId);
+    if (res == null) throw new InternalServerErrorException("用户不存在");
+    return res;
+  }
   ///修改密码
   async updatePwd(updatePwd: UpdatePwd, userId: number) {
     try {
@@ -117,7 +124,7 @@ export class UserService {
     this.userRepository.save(user)
   }
 
-  async getUserInfo(userId: number) {
+  async getUserHistory(userId: number) {
     return await this.userRepository.find({
       where: { 'id': userId },
       relations: ['historyVideos'],

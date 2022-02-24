@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req, Get, Query, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, Query, Param, HttpException, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -42,6 +42,11 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  ///获取个人信息
+  @Get('profile')
+  getProfile( @CurrentUser() user: ReqUser,@Query('userId') userId?: number) {
+    return this.userService.getProfile(userId ?? user.id);
+  }
 
   ///修改密码
   @Post('update.pwd')

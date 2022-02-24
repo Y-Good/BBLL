@@ -26,7 +26,7 @@ export class User extends Time {
     @Column({ comment: '电话', default: null })
     mobile: string;
 
-    @Column({ comment: '性别,1男2女3未知', type: 'integer', default: 3 })
+    @Column({ comment: '性别,0未知,1男,2女', type: 'integer', default: 0 })
     gender: number;
 
     @Column({ comment: '生日', type: 'date', default: null })
