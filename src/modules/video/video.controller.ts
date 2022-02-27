@@ -48,13 +48,16 @@ export class VideoController {
     return await this.videoService.getVideoRank();
   }
 
-
   ///获取视频信息
-  @Get(':id')
-  async getVideoInfo(@Param() params: any, @CurrentUser() user: ReqUser) {
-    const videoId = params.id;
-    const userId = user.id;
-    this.userService.createHistory(videoId, userId);
+  @Get('info')
+  async getVideoInfo(@Query('videoId') videoId: number, @CurrentUser() user: ReqUser) {
+    this.userService.createHistory(videoId, user.id);
     return await this.videoService.getVideoInfo(videoId);
+  }
+
+  //我发布的视频
+  @Get('my')
+  async getMyVideo(@CurrentUser() user: ReqUser) {
+    return await this.videoService.getMyVideo(user.id);
   }
 }

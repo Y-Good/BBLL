@@ -34,21 +34,24 @@ export class Video extends Time {
     @Column({ comment: "视频封面", default: null })
     cover: string;
 
-    ///视频
+    ///一个视频对应一个用户   发布视频
     @ManyToOne(() => User)
     user: User;
 
-    ///点赞
-    @ManyToMany(() => User, (user) => user.thumbUp)
+    ///视频点赞
+    @ManyToMany(() => User, (user) => user.thumbUpVideo)
     users: User[];
 
+    ///视频评论
     @OneToMany(() => Comment, comment => comment.video)
     comments: Comment[];
 
+    ///视频标签
     @ManyToMany(() => Tag, (tag) => tag.videos)
     @JoinTable({ name: 'video_tag' })
     tags: Tag[];
 
+    ///视频历史记录
     @ManyToMany((type) => User, (user) => user.historyVideos)
     historyUsers: User[]
 }

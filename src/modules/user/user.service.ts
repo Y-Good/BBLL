@@ -133,7 +133,8 @@ export class UserService {
 
   ///关注
   async getFollowList(userId: number) {
-    return await this.userRepository.findOne({ relations: ['follows'], where: { id: userId } })
+    const {follows}= await this.userRepository.findOne({ relations: ['follows'], where: { id: userId } })
+    return follows;
   }
 
   ///创建、取消关注

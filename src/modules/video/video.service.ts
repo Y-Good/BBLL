@@ -6,7 +6,6 @@ import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
 import { CreateVideoDto } from './dto/create-video.dto';
-import { UpdateVideoDto } from './dto/update-video.dto';
 
 @Injectable()
 export class VideoService {
@@ -78,5 +77,10 @@ export class VideoService {
     this.videoRepository.save(video);
 
     return video;
+  }
+
+  ///我的视频
+  async getMyVideo(userId:number){
+    return await this.videoRepository.find({where:{user:userId},relations:['user']});
   }
 }

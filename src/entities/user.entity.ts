@@ -39,10 +39,15 @@ export class User extends Time {
     @OneToMany(() => Video, (video) => video.user)
     videos: Video[]
 
-    ///点赞
+    ///点赞 视频
     @ManyToMany((type) => Video, (video) => video.users)
-    @JoinTable({ name: 'thumb_up' })
-    thumbUp: Video[]
+    @JoinTable({ name: 'thumb_up_video' })
+    thumbUpVideo: Video[]
+
+    ///点赞评论
+    @ManyToMany((type) => Comment, (comment) => comment.users)
+    @JoinTable({ name: 'thumb_up_comment' })
+    thumbUpComment: Comment[]
 
     ///评论
     @OneToMany((type) => Comment, (comment) => comment.user)
