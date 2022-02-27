@@ -9,6 +9,7 @@ import { VideoService } from '../video/video.service';
 import { CreateVideoDto } from '../video/dto/create-video.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { nanoid } from 'nanoid';
+import { UpdateUserDto } from '../user/dto/update-user.dto';
 
 const date = moment(new Date()).format("YYYY-MM-DD");
 @Controller('file')
@@ -16,7 +17,12 @@ export class FileController {
   constructor(private readonly fileService: FileService, private readonly videoService: VideoService) { }
 
   @Post('upload')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'video', maxCount: 1 }, { name: 'cover', maxCount: 1 },{name:'avatar',maxCount:1}],
+  @UseInterceptors(FileFieldsInterceptor(
+    [
+      { name: 'video', maxCount: 1 },
+      { name: 'cover', maxCount: 1 },
+      { name: 'avatar', maxCount: 1 }
+    ],
     {
       storage: multer.diskStorage({
         destination: (req, file, cb) => {
@@ -25,7 +31,6 @@ export class FileController {
             filePath = join(__dirname, '../../../public', `videos/${date}`);
           } else if (file.fieldname == 'cover') {
             filePath = join(__dirname, '../../../public', `covers/${date}`);
-          
           } else if (file.fieldname == 'avatar') {
             filePath = join(__dirname, '../../../public', `avatars/${date}`);
           }
@@ -38,19 +43,16 @@ export class FileController {
       }),
     }
   ))
-  uploadVideo(
-    @UploadedFiles() files: { video: Express.Multer.File, cover: Express.Multer.File,avatar:Express.Multer.File },
-    @Body() createVideoDto: CreateVideoDto) {
+  uploadAll(
+    @UploadedFiles() files: {
+      video: Express.Multer.File,
+      cover: Express.Multer.File,
+      avatar: Express.Multer.File,
+    },
+    @Body() dto: UpdateUserDto) {
       console.log(files.avatar[0].path);
       
-    // createVideoDto.url = `${date}/${files.video[0].filename}`;
-    // createVideoDto.cover = `${date}/${files.cover[0].filename}`;
-    // this.videoService.create(createVideoDto);
-    // return files.video;
-    // return {
-    //   "path": date + '/' + files.video.filename,
-    //   "name": file.filename
-    // }
+  //  return files.avatar.path;
 
   }
 }

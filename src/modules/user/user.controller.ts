@@ -28,8 +28,8 @@ export class UserController {
   }
 
   @Post('update')
-  async update(@Body() updateUserDto: UpdateUserDto) {
-    if (updateUserDto) await this.userService.updateUser(updateUserDto);
+  async update(@Body() updateUserDto: UpdateUserDto, @CurrentUser() user: ReqUser) {
+    if (updateUserDto) return await this.userService.updateUser(updateUserDto, user.id);
   }
 
   @Get("search")
@@ -44,7 +44,7 @@ export class UserController {
 
   ///获取个人信息
   @Get('profile')
-  getProfile( @CurrentUser() user: ReqUser,@Query('userId') userId?: number) {
+  getProfile(@CurrentUser() user: ReqUser, @Query('userId') userId?: number) {
     return this.userService.getProfile(userId ?? user.id);
   }
 

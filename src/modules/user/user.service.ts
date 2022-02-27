@@ -48,9 +48,11 @@ export class UserService {
   }
 
   ///修改用户信息
-  async updateUser(updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(updateUserDto: UpdateUserDto, userId: number): Promise<User> {
     try {
-      return await this.userRepository.save(updateUserDto);
+      let user = await this.userRepository.findOne(userId);
+      user.nickname = updateUserDto.nickname;
+      return await this.userRepository.save(user);
     } catch (error) {
       throw new ConflictException(error);
     }
@@ -70,13 +72,13 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-
   ///个人信息
   async getProfile(userId: number) {
     let res = await this.userRepository.findOne(userId);
     if (res == null) throw new InternalServerErrorException("用户不存在");
     return res;
   }
+
   ///修改密码
   async updatePwd(updatePwd: UpdatePwd, userId: number) {
     try {
@@ -133,7 +135,7 @@ export class UserService {
 
   ///关注
   async getFollowList(userId: number) {
-    const {follows}= await this.userRepository.findOne({ relations: ['follows'], where: { id: userId } })
+    const { follows } = await this.userRepository.findOne({ relations: ['follows'], where: { id: userId } })
     return follows;
   }
 
