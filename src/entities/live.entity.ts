@@ -4,7 +4,7 @@ import { Time } from './common.entity'
 @Entity('live')
 export class Live extends Time {
 
-    @PrimaryGeneratedColumn({ comment: '主键，自增' })
+    @PrimaryGeneratedColumn({ comment: '主键,自增' })
     id: number;
 
     @Column({ comment: 'upId' })

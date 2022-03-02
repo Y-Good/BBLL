@@ -58,6 +58,13 @@ export class UserService {
     }
   }
 
+  ///修改头像
+  async updateAvatar(url: string, userId: number) {
+    let user = await this.userRepository.findOne(userId);
+    user.avatar = `${url}?x-oss-process=style/default`;
+    return await this.userRepository.save(user);
+  }
+
   ///用户搜索
   async searchUser(key: string): Promise<User[]> {
     try {
