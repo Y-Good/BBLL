@@ -4,8 +4,8 @@ import { FileController } from './file.controller';
 import { VideoModule } from '../video/video.module';
 
 @Module({
-  imports:[VideoModule],
+  imports: [VideoModule],
   controllers: [FileController],
   providers: [FileService]
 })
-export class FileModule {}
+export class FileModule { }

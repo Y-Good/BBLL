@@ -20,7 +20,7 @@ export class User extends Time {
     @Column({ comment: '签名', length: 50, default: null })
     signature: string;
 
-    @Column({ comment: '头像', default: null })
+    @Column({ comment: '头像', default: '/avatars/default/avatar.png' })
     avatar: string;
 
     @Column({ comment: '电话', default: null })
