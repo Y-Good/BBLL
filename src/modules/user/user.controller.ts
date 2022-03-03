@@ -1,4 +1,15 @@
-import { Controller, Post, Body, UseGuards, Req, Get, Query, Param, HttpException, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Get,
+  Query,
+  Param,
+  HttpException,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,7 +23,10 @@ import { FollowUserDto } from './dto/follow-user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly authService: AuthService) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('create')
   @AllowAnon()
@@ -28,11 +42,15 @@ export class UserController {
   }
 
   @Post('update')
-  async update(@Body() updateUserDto: UpdateUserDto, @CurrentUser() user: ReqUser) {
-    if (updateUserDto) return await this.userService.updateUser(updateUserDto, user.id);
+  async update(
+    @Body() updateUserDto: UpdateUserDto,
+    @CurrentUser() user: ReqUser,
+  ) {
+    if (updateUserDto)
+      return await this.userService.updateUser(updateUserDto, user.id);
   }
 
-  @Get("search")
+  @Get('search')
   async search(@Query() query: any) {
     return await this.userService.searchUser(query.key);
   }
@@ -55,7 +73,6 @@ export class UserController {
   }
   ///忘记密码
 
-
   ///获取关注
   @Get('follow')
   // @AllowAnon()
@@ -64,7 +81,13 @@ export class UserController {
   }
 
   @Post('follow')
-  async createAndCancelFollow(@CurrentUser() user: ReqUser, @Body() followUserDto: FollowUserDto) {
-    return await this.userService.createAndCancelFollow(user.id, followUserDto.followId);
+  async createAndCancelFollow(
+    @CurrentUser() user: ReqUser,
+    @Body() followUserDto: FollowUserDto,
+  ) {
+    return await this.userService.createAndCancelFollow(
+      user.id,
+      followUserDto.followId,
+    );
   }
 }

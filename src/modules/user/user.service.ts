@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
@@ -12,14 +16,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async createUser(createUserDto: CreateUserDto) {
     try {
@@ -48,7 +51,10 @@ export class UserService {
   }
 
   ///修改用户信息
-  async updateUser(updateUserDto: UpdateUserDto, userId: number): Promise<User> {
+  async updateUser(
+    updateUserDto: UpdateUserDto,
+    userId: number,
+  ): Promise<User> {
     try {
       let user = await this.userRepository.findOne(userId);
       user.nickname = updateUserDto.nickname;
@@ -82,7 +88,7 @@ export class UserService {
   ///个人信息
   async getProfile(userId: number) {
     let res = await this.userRepository.findOne(userId);
-    if (res == null) throw new InternalServerErrorException("用户不存在");
+    if (res == null) throw new InternalServerErrorException('用户不存在');
     return res;
   }
 
@@ -104,7 +110,6 @@ export class UserService {
       } else {
         throw '旧密码错误';
       }
-
     } catch (error) {
       throw new ConflictException(error);
     }
@@ -113,42 +118,47 @@ export class UserService {
   /** 校验 token */
   verifyToken(token: string): string {
     try {
-      if (!token) return null
-      const id = this.jwtService.verify(token.replace('Bearer ', ''))
-      return id
+      if (!token) return null;
+      const id = this.jwtService.verify(token.replace('Bearer ', ''));
+      return id;
     } catch (error) {
-      return null
+      return null;
     }
   }
 
   async createHistory(videoId: any, userId: any) {
     let user = await this.userRepository.findOne({
-      where: { 'id': userId },
+      where: { id: userId },
       relations: ['historyVideos'],
     });
-    let video = await this.videoRepository.findOne(videoId)
+    let video = await this.videoRepository.findOne(videoId);
 
-    user.historyVideos.push(video)
+    user.historyVideos.push(video);
 
-    this.userRepository.save(user)
+    this.userRepository.save(user);
   }
 
   async getUserHistory(userId: number) {
     return await this.userRepository.find({
-      where: { 'id': userId },
+      where: { id: userId },
       relations: ['historyVideos'],
     });
   }
 
   ///关注
   async getFollowList(userId: number) {
-    const { follows } = await this.userRepository.findOne({ relations: ['follows'], where: { id: userId } })
+    const { follows } = await this.userRepository.findOne({
+      relations: ['follows'],
+      where: { id: userId },
+    });
     return follows;
   }
 
   ///创建、取消关注
   async createAndCancelFollow(userId: number, followId: number) {
-    let user1 = await this.userRepository.findOne(userId, { relations: ['follows'] });
+    let user1 = await this.userRepository.findOne(userId, {
+      relations: ['follows'],
+    });
     let user2 = await this.userRepository.findOne(followId);
     let followIndex: number = -1;
 
@@ -157,7 +167,7 @@ export class UserService {
         followIndex = index;
         return;
       }
-    })
+    });
 
     if (followIndex != -1) {
       delete user1.follows[followIndex];
@@ -167,5 +177,4 @@ export class UserService {
     let res = await this.userRepository.save(user1);
     if (res != null) return true;
   }
-
 }

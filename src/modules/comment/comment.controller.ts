@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
@@ -8,10 +18,13 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Controller('comment')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) { }
+  constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  async create(@Body() createCommentDto:CreateCommentDto, @CurrentUser() user: any):Promise<boolean> {
+  async create(
+    @Body() createCommentDto: CreateCommentDto,
+    @CurrentUser() user: any,
+  ): Promise<boolean> {
     return await this.commentService.create(createCommentDto, user.id);
   }
 
@@ -28,10 +41,9 @@ export class CommentController {
     return await this.commentService.removeComment(commentId);
   }
 
-
   ///获取我的评论
   @Get('my')
-  async getMyComment(@CurrentUser() user:ReqUser) {    
+  async getMyComment(@CurrentUser() user: ReqUser) {
     return await this.commentService.getMyComment(user.id);
   }
 }

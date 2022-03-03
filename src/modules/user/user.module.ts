@@ -14,10 +14,11 @@ import { jwtContants } from '../auth/jwt.contants';
       secret: jwtContants.secret,
       signOptions: {
         expiresIn: '30d',
-      }
-    })],
+      },
+    }),
+  ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService]
+  exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}

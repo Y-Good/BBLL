@@ -11,14 +11,18 @@ import { Tag } from 'src/entities/tag.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Video, User, Tag]), UserModule, JwtModule.register({
-    secret: jwtContants.secret,
-    signOptions: {
-      expiresIn: '30d',
-    }
-  })],
+  imports: [
+    TypeOrmModule.forFeature([Video, User, Tag]),
+    UserModule,
+    JwtModule.register({
+      secret: jwtContants.secret,
+      signOptions: {
+        expiresIn: '30d',
+      },
+    }),
+  ],
   controllers: [VideoController],
   providers: [VideoService],
-  exports: [VideoService]
+  exports: [VideoService],
 })
-export class VideoModule { }
+export class VideoModule {}

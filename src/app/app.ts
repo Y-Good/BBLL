@@ -1,4 +1,3 @@
-
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -10,12 +9,9 @@ export default async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new TransformInterceptor());;
+  app.useGlobalInterceptors(new TransformInterceptor());
   app.useStaticAssets(join(__dirname, '..', '../public'), {
     prefix: '/static',
   });
   return app;
-}
-
-
-
+};

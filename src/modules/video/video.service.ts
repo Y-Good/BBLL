@@ -9,7 +9,6 @@ import { CreateVideoDto } from './dto/create-video.dto';
 
 @Injectable()
 export class VideoService {
-
   constructor(
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
@@ -17,7 +16,7 @@ export class VideoService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
-  ) { }
+  ) {}
 
   async create(createVideoDto: CreateVideoDto, id: number) {
     let user = await this.userRepository.findOne(id);
@@ -30,11 +29,12 @@ export class VideoService {
   }
 
   async findAll(): Promise<Video[]> {
-    return await this.videoRepository.createQueryBuilder('video')
-    .leftJoinAndSelect('video.user','user')
-    .leftJoinAndSelect('video.tags','tags')
-    .addSelect("video.createDate")
-    .getMany();
+    return await this.videoRepository
+      .createQueryBuilder('video')
+      .leftJoinAndSelect('video.user', 'user')
+      .leftJoinAndSelect('video.tags', 'tags')
+      .addSelect('video.createDate')
+      .getMany();
   }
 
   // async update(vid: number, upId: number, updateVideoDto: UpdateVideoDto) {
@@ -46,33 +46,38 @@ export class VideoService {
   async thumbUp(videoId: number, userId: number) {
     try {
       let user = await this.userRepository.findOne(userId);
-      let video = await this.videoRepository.findOne(videoId, { relations: ['users'] });
-      video.users.map(e => {
-        e.id === user.id
-          ? video.users.unshift(user)
-          : video.users.push(user);
-      })
+      let video = await this.videoRepository.findOne(videoId, {
+        relations: ['users'],
+      });
+      video.users.map((e) => {
+        e.id === user.id ? video.users.unshift(user) : video.users.push(user);
+      });
 
       video.thumbUp = video.users.length;
-      return await this.videoRepository.save(video)
+      return await this.videoRepository.save(video);
     } catch (error) {
       throw new BadRequestException(error);
     }
-
   }
   ///点赞列表
   async getThumbUpList(videoId: number) {
-    return await this.videoRepository.findOne({ relations: ['users'], where: { 'id': videoId } });
+    return await this.videoRepository.findOne({
+      relations: ['users'],
+      where: { id: videoId },
+    });
   }
 
   ///排行
   getVideoRank() {
-    return this.videoRepository.find({ order: { thumbUp: "ASC" } });
+    return this.videoRepository.find({ order: { thumbUp: 'ASC' } });
   }
 
   ///获取视频信息
   async getVideoInfo(videoId: any) {
-    let video = await this.videoRepository.findOne({ where: { 'id': videoId }, relations: ['historyUsers'] });
+    let video = await this.videoRepository.findOne({
+      where: { id: videoId },
+      relations: ['historyUsers'],
+    });
     video.view = video.historyUsers.length;
     this.videoRepository.save(video);
 
@@ -80,7 +85,10 @@ export class VideoService {
   }
 
   ///我的视频
-  async getMyVideo(userId:number){
-    return await this.videoRepository.find({where:{user:userId},relations:['user']});
+  async getMyVideo(userId: number) {
+    return await this.videoRepository.find({
+      where: { user: userId },
+      relations: ['user'],
+    });
   }
 }

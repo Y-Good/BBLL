@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from 'src/entities/comment.entity';
@@ -14,7 +14,7 @@ export class CommentService {
     private readonly videoRepository: Repository<Video>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   getCommentList(videoId: number) {
     return this.commentRepository
@@ -25,7 +25,10 @@ export class CommentService {
   }
 
   ///评论
-  async create(createCommentDto: CreateCommentDto, userId: number): Promise<boolean> {
+  async create(
+    createCommentDto: CreateCommentDto,
+    userId: number,
+  ): Promise<boolean> {
     const { videoId, content } = createCommentDto;
     let comment = new Comment();
     let video = await this.videoRepository.findOne(videoId);
@@ -39,11 +42,11 @@ export class CommentService {
 
   ///我的评论
   async getMyComment(userId: number) {
-    const{comments} =await this.userRepository.findOne({
-        relations: ['comments', 'comments.video','comments.user'],
-        where: { id: userId },
-      });
-     return comments;
+    const { comments } = await this.userRepository.findOne({
+      relations: ['comments', 'comments.video', 'comments.user'],
+      where: { id: userId },
+    });
+    return comments;
   }
 
   ///删除

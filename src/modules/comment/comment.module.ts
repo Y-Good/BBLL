@@ -7,8 +7,8 @@ import { Video } from 'src/entities/video.entity';
 import { User } from 'src/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment,Video,User])],
+  imports: [TypeOrmModule.forFeature([Comment, Video, User])],
   controllers: [CommentController],
-  providers: [CommentService]
+  providers: [CommentService],
 })
-export class CommentModule { }
+export class CommentModule {}

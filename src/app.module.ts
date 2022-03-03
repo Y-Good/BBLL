@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RegisterMiddleware } from './common/middlewares/register.middleware';
 import { AuthModule } from './modules/auth/auth.module';
@@ -27,9 +32,9 @@ import { WsModule } from './modules/ws/ws.module';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard
-    }
-  ]
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
