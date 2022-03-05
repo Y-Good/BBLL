@@ -67,7 +67,7 @@ export class UserService {
   ///修改头像
   async updateAvatar(url: string, userId: number) {
     let user = await this.userRepository.findOne(userId);
-    user.avatar = `${url}?x-oss-process=style/default`;
+    user.avatar = url;
     return await this.userRepository.save(user);
   }
 
