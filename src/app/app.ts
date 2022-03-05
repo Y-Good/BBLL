@@ -10,8 +10,8 @@ export default async () => {
   app.enableCors();
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
-  app.useStaticAssets(join(__dirname, '..', '../public'), {
-    prefix: '/static',
-  });
+  // app.useStaticAssets(join(__dirname, '..', '../public'), {
+  //   prefix: '/static',
+  // });
   return app;
 };

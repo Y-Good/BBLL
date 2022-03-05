@@ -22,10 +22,11 @@ export class VideoService {
     let user = await this.userRepository.findOne(id);
     createVideoDto.user = user;
     const { tags: oldTag, ...newDto } = createVideoDto;
-    let tags: Tag[] = await this.tagRepository.findByIds(createVideoDto.tags);
-    let video = { tags, ...newDto };
+    // let tags: Tag[] = await this.tagRepository.findByIds(createVideoDto.tags);
 
-    return await this.videoRepository.save(video);
+    // let video = newDto ;
+
+    return await this.videoRepository.save(newDto);
   }
 
   async findAll(): Promise<Video[]> {
@@ -33,6 +34,7 @@ export class VideoService {
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.user', 'user')
       .leftJoinAndSelect('video.tags', 'tags')
+      .leftJoinAndSelect('video.category','category')
       .addSelect('video.createDate')
       .getMany();
   }

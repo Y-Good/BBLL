@@ -16,6 +16,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/auth.guard';
 import { TagModule } from './modules/tag/tag.module';
 import { WsModule } from './modules/ws/ws.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { WsModule } from './modules/ws/ws.module';
     CollectModule,
     TagModule,
     WsModule,
+    CategoryModule,
   ],
   providers: [
     {

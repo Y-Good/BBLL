@@ -43,10 +43,11 @@ export class CommentService {
   ///我的评论
   async getMyComment(userId: number) {
     const { comments } = await this.userRepository.findOne({
-      relations: ['comments', 'comments.video', 'comments.user'],
+      relations: ['comments', 'comments.video'],
       where: { id: userId },
     });
-    return comments;
+
+    return comments.reverse();
   }
 
   ///删除
