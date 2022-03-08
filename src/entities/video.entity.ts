@@ -11,9 +11,11 @@ import {
 } from 'typeorm';
 import { Category } from './category.entity';
 import { Comment } from './comment.entity';
-import { Time } from './common.entity';
+import { Time } from './base.entity';
 import { Tag } from './tag.entity';
 import { User } from './user.entity';
+import { Histroy } from './histroy.entity';
+import { Notify } from './notify.entity';
 
 @Entity('video')
 export class Video extends Time {
@@ -41,6 +43,9 @@ export class Video extends Time {
   @Column({ comment: '视频封面', default: null })
   cover: string;
 
+  @Column({ comment: '视频时长', default: 0 })
+  duration: number;
+
   ///一个视频对应一个用户   发布视频
   @ManyToOne(() => User)
   user: User;
@@ -58,12 +63,16 @@ export class Video extends Time {
   @JoinTable({ name: 'video_tag' })
   tags: Tag[];
 
-  ///视频历史记录
-  @ManyToMany((type) => User, (user) => user.historyVideos)
-  historyUsers: User[];
-
   ///分类
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category' })
   category: Category;
+
+  ///历史记录  也可作为播放量
+  @OneToMany(() => Histroy, (history) => history.video)
+  histroy: Histroy[];
+
+  ///通知
+  @OneToOne(() => Notify)
+  notify: Notify;
 }

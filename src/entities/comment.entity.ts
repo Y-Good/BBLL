@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { Time } from './common.entity'
+import { Time } from './base.entity'
 import { User } from './user.entity';
 import { Video } from './video.entity';
 

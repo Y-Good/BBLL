@@ -19,14 +19,16 @@ export class VideoService {
   ) {}
 
   async create(createVideoDto: CreateVideoDto, id: number) {
+    let tags: Tag[] = [];
     let user = await this.userRepository.findOne(id);
     createVideoDto.user = user;
     const { tags: oldTag, ...newDto } = createVideoDto;
-    // let tags: Tag[] = await this.tagRepository.findByIds(createVideoDto.tags);
+    if (createVideoDto.tags != null) {
+      tags = await this.tagRepository.findByIds(createVideoDto.tags);
+    }
 
-    // let video = newDto ;
-
-    return await this.videoRepository.save(newDto);
+    let video = { tags, ...newDto };
+    return await this.videoRepository.save(video);
   }
 
   async findAll(): Promise<Video[]> {
@@ -34,7 +36,7 @@ export class VideoService {
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.user', 'user')
       .leftJoinAndSelect('video.tags', 'tags')
-      .leftJoinAndSelect('video.category','category')
+      .leftJoinAndSelect('video.category', 'category')
       .addSelect('video.createDate')
       .getMany();
   }
@@ -78,19 +80,18 @@ export class VideoService {
   async getVideoInfo(videoId: any) {
     let video = await this.videoRepository.findOne({
       where: { id: videoId },
-      relations: ['historyUsers'],
     });
-    video.view = video.historyUsers.length;
-    this.videoRepository.save(video);
 
     return video;
   }
 
   ///我的视频
   async getMyVideo(userId: number) {
-    return await this.videoRepository.find({
-      where: { user: userId },
-      relations: ['user'],
-    });
+    return await this.videoRepository
+      .createQueryBuilder('video')
+      .leftJoinAndSelect('video.user', 'user')
+      .addSelect('video.createDate')
+      .where('user.id=:id', { id: userId })
+      .getMany();
   }
 }

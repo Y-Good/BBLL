@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { Time } from './common.entity'
+import { Time } from './base.entity'
 
 @Entity({ name: 'barrage' })
 export class Barrage extends Time {

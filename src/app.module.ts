@@ -17,6 +17,8 @@ import { JwtAuthGuard } from './common/guards/auth.guard';
 import { TagModule } from './modules/tag/tag.module';
 import { WsModule } from './modules/ws/ws.module';
 import { CategoryModule } from './modules/category/category.module';
+import { HistroyModule } from './modules/histroy/histroy.module';
+import { NotifyModule } from './modules/notify/notify.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { CategoryModule } from './modules/category/category.module';
     TagModule,
     WsModule,
     CategoryModule,
+    HistroyModule,
+    NotifyModule,
   ],
   providers: [
     {

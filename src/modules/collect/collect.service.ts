@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { collectEnum } from 'src/common/enums/collect.enum';
+import { CollectEnum } from 'src/common/enums/collect.enum';
 import { Collect } from 'src/entities/collect.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
@@ -15,7 +15,7 @@ export class CollectService {
     private readonly videoRepository: Repository<Video>,
   ) { }
 
-  async create(videoId: number, userId: number, type: collectEnum) {
+  async create(videoId: number, userId: number, type: CollectEnum) {
     let collect = new Collect();
     let video = await this.videoRepository.findOne(videoId);
     collect.userId = userId;
@@ -33,7 +33,7 @@ export class CollectService {
   }
 
   ///取消
-  async cancel(videoId: number, userId: number, type: collectEnum) {
+  async cancel(videoId: number, userId: number, type: CollectEnum) {
     try {
       let collect = await this.collectRepository.findOne({
         where: { 'type': type, 'userId': userId, 'videoId': videoId }

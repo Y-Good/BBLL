@@ -126,25 +126,6 @@ export class UserService {
     }
   }
 
-  async createHistory(videoId: any, userId: any) {
-    let user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['historyVideos'],
-    });
-    let video = await this.videoRepository.findOne(videoId);
-
-    user.historyVideos.push(video);
-
-    this.userRepository.save(user);
-  }
-
-  async getUserHistory(userId: number) {
-    return await this.userRepository.find({
-      where: { id: userId },
-      relations: ['historyVideos'],
-    });
-  }
-
   ///关注
   async getFollowList(userId: number) {
     const { follows } = await this.userRepository.findOne({

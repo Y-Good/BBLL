@@ -59,11 +59,7 @@ export class VideoController {
 
   ///获取视频信息
   @Get('info')
-  async getVideoInfo(
-    @Query('videoId') videoId: number,
-    @CurrentUser() user: ReqUser,
-  ) {
-    this.userService.createHistory(videoId, user.id);
+  async getVideoInfo(@Query('videoId') videoId: number) {
     return await this.videoService.getVideoInfo(videoId);
   }
 
