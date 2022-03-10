@@ -7,13 +7,12 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class CollectService {
-
   constructor(
     @InjectRepository(Collect)
     private readonly collectRepository: Repository<Collect>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
-  ) { }
+  ) {}
 
   async create(videoId: number, userId: number, type: CollectEnum) {
     let collect = new Collect();
@@ -24,10 +23,9 @@ export class CollectService {
     return this.collectRepository.save(collect);
   }
 
-
   findByType(type: string, userId: number) {
     return this.collectRepository.find({
-      where: { 'type': type, 'userId': userId },
+      where: { type: type, userId: userId },
       relations: ['video'],
     });
   }
@@ -36,16 +34,14 @@ export class CollectService {
   async cancel(videoId: number, userId: number, type: CollectEnum) {
     try {
       let collect = await this.collectRepository.findOne({
-        where: { 'type': type, 'userId': userId, 'videoId': videoId }
-      })
-      let res = await this.collectRepository.delete(collect);
+        where: { type: type, userId: userId, videoId: videoId },
+      });
+      let res = await this.collectRepository.delete(collect.id);
       if (res != null) {
         return '操作成功';
       }
     } catch (error) {
       throw new BadRequestException(error);
-
     }
-
   }
 }

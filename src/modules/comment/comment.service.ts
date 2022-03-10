@@ -5,6 +5,7 @@ import { Comment } from 'src/entities/comment.entity';
 import { Video } from 'src/entities/video.entity';
 import { User } from 'src/entities/user.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { NotifyService } from '../notify/notify.service';
 @Injectable()
 export class CommentService {
   constructor(
@@ -14,6 +15,7 @@ export class CommentService {
     private readonly videoRepository: Repository<Video>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly notifyService: NotifyService,
   ) {}
 
   getCommentList(videoId: number) {
@@ -21,6 +23,7 @@ export class CommentService {
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.user', 'user')
       .where('videoId=:videoId', { videoId: videoId })
+      .orderBy('comment.createDate', 'DESC')
       .getMany();
   }
 
@@ -28,7 +31,7 @@ export class CommentService {
   async create(
     createCommentDto: CreateCommentDto,
     userId: number,
-  ): Promise<boolean> {
+  ): Promise<Comment> {
     const { videoId, content } = createCommentDto;
     let comment = new Comment();
     let video = await this.videoRepository.findOne(videoId);
@@ -37,7 +40,10 @@ export class CommentService {
     comment.video = video;
     comment.user = user;
     let res = await this.commentRepository.save(comment);
-    return res != null;
+
+    ///通知
+    this.notifyService.create(videoId, userId, res);
+    return res;
   }
 
   ///我的评论

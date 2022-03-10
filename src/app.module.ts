@@ -19,6 +19,7 @@ import { WsModule } from './modules/ws/ws.module';
 import { CategoryModule } from './modules/category/category.module';
 import { HistroyModule } from './modules/histroy/histroy.module';
 import { NotifyModule } from './modules/notify/notify.module';
+import { BannerModule } from './modules/banner/banner.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { NotifyModule } from './modules/notify/notify.module';
     CategoryModule,
     HistroyModule,
     NotifyModule,
+    BannerModule,
   ],
   providers: [
     {

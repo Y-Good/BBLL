@@ -13,6 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { ReqUser } from 'src/common/interfaces/req-user.interface';
+import { Comment } from 'src/entities/comment.entity';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 
@@ -24,7 +25,7 @@ export class CommentController {
   async create(
     @Body() createCommentDto: CreateCommentDto,
     @CurrentUser() user: any,
-  ): Promise<boolean> {
+  ): Promise<Comment> {
     return await this.commentService.create(createCommentDto, user.id);
   }
 

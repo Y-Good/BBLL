@@ -75,7 +75,7 @@ export class User extends Time {
   @OneToMany(() => Histroy, (history) => history.user)
   history: Histroy[];
 
-  ///通知
-  @OneToMany(() => Notify, (notify) => notify.toUser)
-  notify: Notify[];
+  // ///通知
+  // @OneToMany(() => Notify, (notify) => notify.toUser)
+  // notify: Notify[];
 }

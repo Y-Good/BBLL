@@ -1,5 +1,4 @@
 export enum NotifyType {
-    THUMBUP = 'thumbup',
-    COMMENT = 'comment',
-    
+  THUMBUP = 'thumbUp',
+  COMMENT = 'comment',
 }
