@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Comment } from 'src/entities/comment.entity';
@@ -6,6 +6,7 @@ import { Video } from 'src/entities/video.entity';
 import { User } from 'src/entities/user.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { NotifyService } from '../notify/notify.service';
+import { NotifyType } from 'src/common/enums/notify.enum';
 @Injectable()
 export class CommentService {
   constructor(
@@ -42,7 +43,7 @@ export class CommentService {
     let res = await this.commentRepository.save(comment);
 
     ///通知
-    this.notifyService.create(videoId, userId, res);
+    this.notifyService.create(userId, videoId, res, NotifyType.COMMENT);
     return res;
   }
 
@@ -62,5 +63,38 @@ export class CommentService {
     let comment = await this.commentRepository.findOne(commentId);
     let res = await this.commentRepository.remove(comment);
     return res != null;
+  }
+
+  ///通知
+  async isThumbUpVideo(commentId: number, userId: number) {
+    let user = await this.userRepository.findOne(userId, {
+      relations: ['thumbUpComment'],
+    });
+    return user.thumbUpComment.some((comment) => comment.id == commentId);
+  }
+
+  ///点赞
+  async thumbUp(commentId: number, userId: number) {
+    try {
+      let user = await this.userRepository.findOne(userId);
+      let comment = await this.commentRepository.findOne(commentId, {
+        relations: ['users'],
+      });
+
+      if (comment.users.length > 0) {
+        comment.users.map((e, index) => {
+          if (e.id == userId) comment.users.splice(index, 1);
+        });
+      } else {
+        this.notifyService.create(userId, null, comment, NotifyType.THUMBUP);
+        comment.users.push(user);
+      }
+
+      let res = await this.commentRepository.save(comment);
+      /* 有问题 */
+      return res != null;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

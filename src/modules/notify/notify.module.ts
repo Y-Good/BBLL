@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Global, Module } from '@nestjs/common';
 import { NotifyService } from './notify.service';
 import { NotifyController } from './notify.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,7 +7,11 @@ import { UserModule } from '../user/user.module';
 import { VideoModule } from '../video/video.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Notify]), UserModule, VideoModule],
+  imports: [
+    TypeOrmModule.forFeature([Notify]),
+    UserModule,
+    forwardRef(() => VideoModule),
+  ],
   controllers: [NotifyController],
   providers: [NotifyService],
   exports: [NotifyService],

@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UseGuards,
-  Query,
-  Param,
-  Request,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
@@ -45,9 +36,17 @@ export class VideoController {
     return await this.videoService.thumbUp(videoId, user.id);
   }
 
-  @Get('getThumbUp')
+  @Get('thumbUpList')
   async getThumbUpList(@Query('videoId') videoId: number) {
     return await this.videoService.getThumbUpList(videoId);
+  }
+
+  @Get('isThumbUp')
+  async getIsThumbUp(
+    @Query('videoId') videoId: number,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.videoService.isThumbUpVideo(videoId, user.id);
   }
 
   ///视频排行

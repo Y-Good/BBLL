@@ -47,4 +47,21 @@ export class CommentController {
   async getMyComment(@CurrentUser() user: ReqUser) {
     return await this.commentService.getMyComment(user.id);
   }
+
+  ///dianz
+  @Get('thumbUp')
+  async thumbUp(
+    @Query('commentId') commentId: number,
+    @CurrentUser() user: any,
+  ) {
+    return await this.commentService.thumbUp(commentId, user.id);
+  }
+
+  @Get('isThumbUp')
+  async getIsThumbUp(
+    @Query('commentId') commentId: number,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.commentService.isThumbUpVideo(commentId, user.id);
+  }
 }

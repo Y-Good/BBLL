@@ -8,8 +8,13 @@ import { UserModule } from '../user/user.module';
 import { VideoModule } from '../video/video.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Histroy,Video]), UserModule, VideoModule],
+  imports: [
+    TypeOrmModule.forFeature([Histroy, Video]),
+    UserModule,
+    VideoModule,
+  ],
   controllers: [HistroyController],
   providers: [HistroyService],
+  exports: [HistroyService],
 })
 export class HistroyModule {}

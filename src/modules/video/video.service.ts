@@ -1,10 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { OmitType } from '@nestjs/mapped-types';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotifyType } from 'src/common/enums/notify.enum';
 import { Tag } from 'src/entities/tag.entity';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
+import { NotifyService } from '../notify/notify.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 
 @Injectable()
@@ -16,6 +23,8 @@ export class VideoService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
+    @Inject(forwardRef(() => NotifyService))
+    private readonly notifyService: NotifyService,
   ) {}
 
   async create(createVideoDto: CreateVideoDto, id: number) {
@@ -36,7 +45,7 @@ export class VideoService {
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.user', 'user')
       .leftJoinAndSelect('video.tags', 'tags')
-      .leftJoinAndSelect('video.category', 'category')
+      .leftJoinAndSelect('video.users', 'users')
       .addSelect('video.createDate')
       .getMany();
   }
@@ -53,12 +62,26 @@ export class VideoService {
       let video = await this.videoRepository.findOne(videoId, {
         relations: ['users'],
       });
-      video.users.map((e) => {
-        e.id === user.id ? video.users.unshift(user) : video.users.push(user);
-      });
-
+      ///有人点赞
+      if (video.users.length > 0) {
+        // 判断是否点赞
+        let isExist = video.users.some((user) => user.id == userId);
+        let index = video.users.indexOf(user);
+        if (isExist) {
+          this.notifyService.create(userId, videoId, null, NotifyType.THUMBUP);
+          video.users.push(user);
+        } else {
+          video.users.splice(index, 1);
+        }
+      } else {
+        //通知
+        this.notifyService.create(userId, videoId, null, NotifyType.THUMBUP);
+        video.users.push(user);
+      }
       video.thumbUp = video.users.length;
-      return await this.videoRepository.save(video);
+      let res = await this.videoRepository.save(video);
+      /* 有问题 */
+      return res != null;
     } catch (error) {
       throw new BadRequestException(error);
     }
@@ -69,6 +92,14 @@ export class VideoService {
       relations: ['users'],
       where: { id: videoId },
     });
+  }
+
+  ///wode 是否点赞
+  async isThumbUpVideo(videoId: number, userId: number) {
+    let user = await this.userRepository.findOne(userId, {
+      relations: ['thumbUpVideo'],
+    });
+    return user.thumbUpVideo.some((video) => video.id == videoId);
   }
 
   ///排行
