@@ -31,6 +31,10 @@ export class Notify extends Time {
   @JoinColumn()
   fromUser: User;
 
+  @ManyToOne(() => User)
+  @JoinColumn()
+  toUser: User;
+
   @ManyToOne(() => Video)
   @JoinColumn()
   video: Video;

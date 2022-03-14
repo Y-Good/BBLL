@@ -111,6 +111,7 @@ export class VideoService {
   async getVideoInfo(videoId: any) {
     let video = await this.videoRepository.findOne({
       where: { id: videoId },
+      relations: ['user'],
     });
 
     return video;

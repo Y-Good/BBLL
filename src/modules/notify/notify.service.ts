@@ -29,6 +29,7 @@ export class NotifyService {
     notify.fromUser = fromUser;
     notify.video = video;
     notify.type = type;
+    notify.toUser = video.user;
     if (comment != null) {
       notify.comment = comment;
     }
@@ -39,21 +40,31 @@ export class NotifyService {
     return await this.notifyRepository
       .createQueryBuilder('notify')
       .leftJoinAndSelect('notify.fromUser', 'fromUser')
+      .leftJoinAndSelect('notify.toUser', 'toUser')
       .leftJoinAndSelect('notify.video', 'video')
-      .leftJoinAndSelect('video.user', 'user1')
       .leftJoinAndSelect('notify.comment', 'comment')
-      .leftJoinAndSelect('comment.user', 'user2')
       .where('fromUser.id!=:userId', { userId: userId })
-      .andWhere(
-        new Brackets((qb) => {
-          qb.where('user1.id=:userId', { userId: userId }).orWhere(
-            'user2.id=:userId',
-            { userId: userId },
-          );
-        }),
-      )
+      .andWhere('toUser.id=:userId', { userId: userId })
       .addSelect('notify.createDate')
       .orderBy('notify.createDate', 'DESC')
       .getMany();
+  }
+
+  //全部标记已读
+  markRead(userId: number) {
+    this.notifyRepository
+      .createQueryBuilder('notify')
+      .update()
+      .set({ isRead: 1 })
+      .where('toUser=:userId', { userId: userId })
+      .execute();
+  }
+
+  //统计未读
+  async unreadCount(userId: number) {
+    let res = await this.notifyRepository.find({
+      where: { toUser: userId, isRead: 0 },
+    });
+    return res.length;
   }
 }

@@ -11,4 +11,14 @@ export class NotifyController {
   async findAll(@CurrentUser() user: ReqUser) {
     return await this.notifyService.findAll(user.id);
   }
+
+  @Get('/unread')
+  async getUnReadCount(@CurrentUser() user: ReqUser) {
+    return await this.notifyService.unreadCount(user.id);
+  }
+
+  @Get('/mark')
+  async allRead(@CurrentUser() user: ReqUser) {
+    this.notifyService.markRead(user.id);
+  }
 }
