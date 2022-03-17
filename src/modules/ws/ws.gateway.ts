@@ -18,54 +18,50 @@ import { WsService } from './ws.service';
 export class WsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly wsService: WsService) {}
+  @WebSocketServer() wss: Server;
+  constructor() {}
 
   private logger: Logger = new Logger('ChatGateway');
+
   socketList: any = {};
+
+  userId: string;
+  videoId: string;
 
   afterInit(server: any) {
     this.logger.log('websocket init ...');
   }
-  handleConnection(socket: Socket, @CurrentUser() user: ReqUser) {
-    let fromUserID: string = socket.handshake.query.uid as string;
-    this.socketList[fromUserID] = socket.id;
-    // if (fromUserID != '45') {
-    socket.join('hhh'); ///加入房间
-    // }
+  handleConnection(socket: Socket) {
+    this.userId = socket.handshake.query.userId as string;
+    this.videoId = socket.handshake.query.videoId as string;
+    this.socketList[this.userId] = socket.id;
 
-    this.wss.to('hhh').emit('people', Object.keys(this.socketList).length);
+    socket.join(this.videoId); ///加入房间
+    ///在线人数
+    this.wss
+      .to(this.videoId)
+      .emit('online', Object.keys(this.socketList).length);
+    ///进入消息
+    this.wss.to(this.videoId).emit('join', this.userId + '进入房间');
     console.log('id:' + socket.id + '进入');
   }
 
   handleDisconnect(socket: Socket) {
-    let uid: string = socket.handshake.query.uid as string;
-    if (this.socketList.hasOwnProperty(uid)) {
+    if (this.socketList.hasOwnProperty(this.userId)) {
       //删除
-      delete this.socketList[uid];
+      delete this.socketList[this.userId];
     }
 
-    this.wss.to('hhh').emit('people', Object.keys(this.socketList).length);
+    this.wss
+      .to(this.videoId)
+      .emit('online', Object.keys(this.socketList).length);
   }
 
-  @WebSocketServer() wss: Server;
   @SubscribeMessage('msg')
   async handleMessage(
     @ConnectedSocket() socket: Socket,
     @MessageBody() data: any,
   ) {
-    console.log(data);
-    var ss = await this.wss.in('hhh').allSockets();
-
-    ///房间内人数
-    let i = 0;
-    ss.forEach((e) => i++);
-    this.wss.to('hhh').emit('room', data); ///房间消息
-  }
-
-  ///进入房间
-  @SubscribeMessage('joinRoom')
-  async joinRoom(@ConnectedSocket() socket: Socket, @MessageBody() data: any) {
-    let count = await this.wss.in('hhh').allSockets();
-    this.wss.to('hhh').emit('join', data + '进入房间'); ///房间消息
+    this.wss.to(this.videoId).emit('room', data); ///房间消息
   }
 }

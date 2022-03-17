@@ -69,22 +69,4 @@ export class UserController {
     return await this.userService.updatePwd(updatePwd, user.id);
   }
   ///忘记密码
-
-  ///获取关注
-  @Get('follow')
-  // @AllowAnon()
-  async getMyFollow(@CurrentUser() user: ReqUser) {
-    return await this.userService.getFollowList(user.id);
-  }
-
-  @Post('follow')
-  async createAndCancelFollow(
-    @CurrentUser() user: ReqUser,
-    @Body() followUserDto: FollowUserDto,
-  ) {
-    return await this.userService.createAndCancelFollow(
-      user.id,
-      followUserDto.followId,
-    );
-  }
 }

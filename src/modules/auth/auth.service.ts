@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/modules/user/user.service';
 import { compares } from 'src/utils/common.utils';
@@ -6,10 +10,12 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService, private readonly jwtService: JwtService) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validate(number: string, password: string): Promise<any> {
-
     const user = await this.userService.findPassword(number);
 
     if (!user) throw new ConflictException('账号或密码错误');
@@ -24,12 +30,11 @@ export class AuthService {
   }
 
   async login(loginUser: LoginUserDto): Promise<any> {
-
     if (!loginUser.number) return;
     const { id, number } = await this.userService.findUserId(loginUser.number);
-    if (!id || !number) throw new InternalServerErrorException("数据为空");
+    if (!id || !number) throw new InternalServerErrorException('数据为空');
     return {
-      token: this.jwtService.sign({ id, number })
+      token: this.jwtService.sign({ id, number }),
     };
   }
 }

@@ -20,7 +20,7 @@ export class HistroyService {
   async findAll(userId: number) {
     let res = await this.histroyRepository.find({
       where: { user: userId },
-      relations: ['video','video.user','user'],
+      relations: ['video', 'video.user', 'user'],
     });
     return res.reverse();
   }
@@ -35,6 +35,7 @@ export class HistroyService {
 
     const user = await this.userService.getProfile(userId);
     const video = await this.videoRepository.findOne(videoId);
+    if (video == null) return;
     let history = new Histroy();
     history.user = user;
     history.video = video;

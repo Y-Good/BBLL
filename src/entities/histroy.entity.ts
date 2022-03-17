@@ -16,7 +16,7 @@ export class Histroy {
   @ManyToOne(() => User)
   user: User;
 
-  @ManyToOne(() => Video)
+  @ManyToOne(() => Video, { onDelete: 'CASCADE' })
   video: Video;
 
   @CreateDateColumn()

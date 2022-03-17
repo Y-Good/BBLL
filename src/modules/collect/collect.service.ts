@@ -1,47 +1,63 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CollectEnum } from 'src/common/enums/collect.enum';
 import { Collect } from 'src/entities/collect.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
+import { UserService } from '../user/user.service';
+import { VideoService } from '../video/video.service';
 
 @Injectable()
 export class CollectService {
   constructor(
     @InjectRepository(Collect)
     private readonly collectRepository: Repository<Collect>,
-    @InjectRepository(Video)
-    private readonly videoRepository: Repository<Video>,
+
+    private readonly videoService: VideoService,
+
+    private readonly userService: UserService,
   ) {}
 
-  async create(videoId: number, userId: number, type: CollectEnum) {
-    let collect = new Collect();
-    let video = await this.videoRepository.findOne(videoId);
-    collect.userId = userId;
-    collect.type = type;
-    collect.video = video;
-    return this.collectRepository.save(collect);
-  }
-
-  findByType(type: string, userId: number) {
-    return this.collectRepository.find({
-      where: { type: type, userId: userId },
-      relations: ['video'],
-    });
-  }
-
-  ///取消
-  async cancel(videoId: number, userId: number, type: CollectEnum) {
-    try {
-      let collect = await this.collectRepository.findOne({
-        where: { type: type, userId: userId, videoId: videoId },
+  async create(videoId: number, followId: number, userId: number) {
+    const user = await this.userService.getProfile(userId);
+    const follow = await this.userService.getProfile(followId);
+    const video = await this.videoService.getVideoInfo(videoId);
+    let collect: Collect;
+    if (follow != null) {
+      collect = await this.collectRepository.findOne({
+        where: { user: userId, follow: followId, type: CollectEnum.USER },
       });
-      let res = await this.collectRepository.delete(collect.id);
-      if (res != null) {
-        return '操作成功';
-      }
-    } catch (error) {
-      throw new BadRequestException(error);
+    } else if (videoId != null) {
+      collect = await this.collectRepository.findOne({
+        where: { user: userId, video: videoId, type: CollectEnum.VIDEO },
+      });
     }
+    let res: Collect;
+    console.log(collect == null);
+
+    if (collect == null) {
+      let newCollect = new Collect();
+      newCollect.user = user;
+      newCollect.follow = follow;
+      newCollect.video = video;
+      newCollect.type = follow != null ? CollectEnum.USER : CollectEnum.VIDEO;
+      res = await this.collectRepository.save(newCollect);
+    } else {
+      res = await this.collectRepository.remove(collect);
+    }
+
+    return res != null;
+  }
+
+  async findByType(type: CollectEnum, userId: number) {
+    return await this.collectRepository.find({
+      where: { type: type, user: userId },
+      relations: [type == CollectEnum.USER ? 'follow' : 'video'],
+    });
   }
 }

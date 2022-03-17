@@ -35,7 +35,7 @@ export class Comment {
   updateDate: Date;
 
   ///评论那条视频
-  @ManyToOne(() => Video, (video) => video.comments)
+  @ManyToOne(() => Video, (video) => video.comments, { onDelete: 'CASCADE' })
   @JoinColumn()
   video: Video;
 

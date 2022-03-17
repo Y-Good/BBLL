@@ -55,7 +55,7 @@ export class Video extends Time {
   users: User[];
 
   ///视频评论
-  @OneToMany(() => Comment, (comment) => comment.video)
+  @OneToMany(() => Comment, (comment) => comment.video, { onDelete: 'CASCADE' })
   comments: Comment[];
 
   ///视频标签
@@ -69,10 +69,12 @@ export class Video extends Time {
   category: Category;
 
   ///历史记录  也可作为播放量
-  @OneToMany(() => Histroy, (history) => history.video)
+  @OneToMany(() => Histroy, (history) => history.video, {
+    onDelete: 'CASCADE',
+  })
   histroy: Histroy[];
 
   ///通知
-  @OneToOne(() => Notify)
+  @ManyToOne(() => Notify)
   notify: Notify;
 }

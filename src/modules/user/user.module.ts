@@ -6,10 +6,11 @@ import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtContants } from '../auth/jwt.contants';
+import { Collect } from 'src/entities/collect.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Video]),
+    TypeOrmModule.forFeature([User, Video, Collect]),
     JwtModule.register({
       secret: jwtContants.secret,
       signOptions: {

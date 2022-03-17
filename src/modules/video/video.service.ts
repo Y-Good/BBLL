@@ -126,4 +126,11 @@ export class VideoService {
       .where('user.id=:id', { id: userId })
       .getMany();
   }
+
+  ///删除
+  async removeVideo(videoId: number) {
+    let video = await this.videoRepository.findOne(videoId);
+    let res = await this.videoRepository.remove(video);
+    return res != null;
+  }
 }

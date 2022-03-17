@@ -62,14 +62,14 @@ export class User extends Time {
   @OneToMany((type) => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  ///关注的人
-  @ManyToMany((type) => User, (user) => user.follows)
-  @JoinTable({
-    name: 'follow',
-    joinColumn: { name: 'userId' },
-    inverseJoinColumn: { name: 'followId' },
-  })
-  follows: User[];
+  // ///关注的人
+  // @ManyToMany((type) => User, (user) => user.follows)
+  // @JoinTable({
+  //   name: 'follow',
+  //   joinColumn: { name: 'userId' },
+  //   inverseJoinColumn: { name: 'followId' },
+  // })
+  // follows: User[];
 
   ///历史
   @OneToMany(() => Histroy, (history) => history.user)

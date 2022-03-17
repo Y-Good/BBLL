@@ -67,4 +67,9 @@ export class VideoController {
   async getMyVideo(@CurrentUser() user: ReqUser) {
     return await this.videoService.getMyVideo(user.id);
   }
+
+  @Get('remove')
+  async removeVideo(@Query('videoId') videoId: number) {
+    return await this.videoService.removeVideo(videoId);
+  }
 }

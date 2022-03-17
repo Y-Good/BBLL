@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CollectEnum } from 'src/common/enums/collect.enum';
+import { Collect } from 'src/entities/collect.entity';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { compares, encrypt } from 'src/utils/common.utils';
@@ -21,6 +23,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
+    @InjectRepository(Collect)
+    private readonly collectRepository: Repository<Collect>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -87,9 +91,7 @@ export class UserService {
 
   ///个人信息
   async getProfile(userId: number) {
-    let res = await this.userRepository.findOne(userId);
-    if (res == null) throw new InternalServerErrorException('用户不存在');
-    return res;
+    return await this.userRepository.findOne({ where: { id: userId } });
   }
 
   ///修改密码
@@ -124,38 +126,5 @@ export class UserService {
     } catch (error) {
       return null;
     }
-  }
-
-  ///关注
-  async getFollowList(userId: number) {
-    const { follows } = await this.userRepository.findOne({
-      relations: ['follows'],
-      where: { id: userId },
-    });
-    return follows;
-  }
-
-  ///创建、取消关注
-  async createAndCancelFollow(userId: number, followId: number) {
-    let user1 = await this.userRepository.findOne(userId, {
-      relations: ['follows'],
-    });
-    let user2 = await this.userRepository.findOne(followId);
-    let followIndex: number = -1;
-
-    user1.follows.forEach((e, index) => {
-      if (e.id == user2.id) {
-        followIndex = index;
-        return;
-      }
-    });
-
-    if (followIndex != -1) {
-      delete user1.follows[followIndex];
-    } else {
-      user1.follows.push(user2);
-    }
-    let res = await this.userRepository.save(user1);
-    if (res != null) return true;
   }
 }
