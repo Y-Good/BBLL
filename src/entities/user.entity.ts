@@ -62,6 +62,9 @@ export class User extends Time {
   @OneToMany((type) => Comment, (comment) => comment.user)
   comments: Comment[];
 
+  ///回复
+  @ManyToMany((type) => Comment, (comment) => comment.replyUser)
+  replyComments: Comment[];
   // ///关注的人
   // @ManyToMany((type) => User, (user) => user.follows)
   // @JoinTable({

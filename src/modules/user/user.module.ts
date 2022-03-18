@@ -10,7 +10,7 @@ import { Collect } from 'src/entities/collect.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Video, Collect]),
+    TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: jwtContants.secret,
       signOptions: {

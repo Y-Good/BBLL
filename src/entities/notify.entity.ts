@@ -35,7 +35,7 @@ export class Notify extends Time {
   @JoinColumn()
   toUser: User;
 
-  @ManyToOne(() => Video)
+  @ManyToOne(() => Video, { onDelete: 'CASCADE' })
   @JoinColumn()
   video: Video;
 

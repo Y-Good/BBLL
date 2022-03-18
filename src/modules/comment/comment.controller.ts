@@ -1,21 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Query,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { ReqUser } from 'src/common/interfaces/req-user.interface';
 import { Comment } from 'src/entities/comment.entity';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateSecondCommentDto } from './dto/create-second-comment.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -63,5 +53,19 @@ export class CommentController {
     @CurrentUser() user: ReqUser,
   ) {
     return await this.commentService.isThumbUpVideo(commentId, user.id);
+  }
+
+  ///二级评论
+  @Post('second')
+  async createSecondComment(
+    @Body() secondDto: CreateSecondCommentDto,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.commentService.createSecondComment(secondDto, user.id);
+  }
+
+  @Get('second')
+  async getSecondComment(@Query('parentId') parentId: number) {
+    return await this.commentService.findSecondComment(parentId);
   }
 }

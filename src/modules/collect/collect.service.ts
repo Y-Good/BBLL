@@ -1,13 +1,7 @@
-import {
-  BadRequestException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CollectEnum } from 'src/common/enums/collect.enum';
 import { Collect } from 'src/entities/collect.entity';
-import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { VideoService } from '../video/video.service';
@@ -38,7 +32,6 @@ export class CollectService {
       });
     }
     let res: Collect;
-    console.log(collect == null);
 
     if (collect == null) {
       let newCollect = new Collect();
@@ -57,7 +50,10 @@ export class CollectService {
   async findByType(type: CollectEnum, userId: number) {
     return await this.collectRepository.find({
       where: { type: type, user: userId },
-      relations: [type == CollectEnum.USER ? 'follow' : 'video'],
+      relations: [
+        type == CollectEnum.USER ? 'follow' : 'video',
+        type == CollectEnum.VIDEO ? 'video.user' : null,
+      ],
     });
   }
 }

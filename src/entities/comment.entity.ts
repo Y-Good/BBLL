@@ -3,14 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Time } from './base.entity';
-import { Notify } from './notify.entity';
+
 import { User } from './user.entity';
 import { Video } from './video.entity';
 
@@ -22,11 +21,24 @@ export class Comment {
   @Column({ comment: '内容' })
   content: string;
 
-  @Column({ comment: '父级评论id', default: null })
-  parentId: number;
-
-  @Column({ comment: '评论层级，1为一级评论，2为二级评论', default: 1 })
+  @Column({
+    comment: '评论层级，1为一级评论，2为二级评论',
+    default: 1,
+    type: 'integer',
+  })
   level: number;
+
+  @Column({
+    comment: '评论回复数',
+    default: 0,
+  })
+  replyCount: number;
+
+  @Column({
+    comment: '点赞',
+    default: 0,
+  })
+  thumbUpCount: number;
 
   @CreateDateColumn()
   createDate: Date;
@@ -44,7 +56,23 @@ export class Comment {
   @JoinColumn()
   user: User;
 
+  ///回复谁
+  @ManyToOne(() => User, (user) => user.replyComments)
+  @JoinColumn()
+  replyUser: User;
+
   ///用户点赞评论
   @ManyToMany(() => User, (user) => user.thumbUpComment)
   users: User[];
+
+  ///二级评论
+  @ManyToMany(() => Comment, (comment) => comment.secondComment, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable({
+    name: 'comment_second',
+    joinColumn: { name: 'parentId' },
+    inverseJoinColumn: { name: 'childrenId' },
+  })
+  secondComment: Comment[];
 }

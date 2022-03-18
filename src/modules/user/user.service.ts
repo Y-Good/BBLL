@@ -21,10 +21,6 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Video)
-    private readonly videoRepository: Repository<Video>,
-    @InjectRepository(Collect)
-    private readonly collectRepository: Repository<Collect>,
     private readonly jwtService: JwtService,
   ) {}
 
