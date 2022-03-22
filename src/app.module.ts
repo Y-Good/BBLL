@@ -20,6 +20,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { HistroyModule } from './modules/histroy/histroy.module';
 import { NotifyModule } from './modules/notify/notify.module';
 import { BannerModule } from './modules/banner/banner.module';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { BannerModule } from './modules/banner/banner.module';
     HistroyModule,
     NotifyModule,
     BannerModule,
+    SearchModule,
   ],
   providers: [
     {

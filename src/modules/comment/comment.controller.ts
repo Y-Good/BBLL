@@ -34,8 +34,11 @@ export class CommentController {
 
   ///获取我的评论
   @Get('my')
-  async getMyComment(@CurrentUser() user: ReqUser) {
-    return await this.commentService.getMyComment(user.id);
+  async getMyComment(
+    @Query('userId') userId: number,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.commentService.getMyComment(userId ?? user.id);
   }
 
   ///dianz

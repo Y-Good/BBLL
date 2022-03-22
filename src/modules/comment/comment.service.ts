@@ -20,8 +20,8 @@ export class CommentService {
     private readonly notifyService: NotifyService,
   ) {}
 
-  getCommentList(videoId: number) {
-    return this.commentRepository
+  async getCommentList(videoId: number) {
+    return await this.commentRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.user', 'user')
       .where('videoId=:videoId', { videoId: videoId })

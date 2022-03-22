@@ -5,14 +5,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CollectEnum } from 'src/common/enums/collect.enum';
-import { Collect } from 'src/entities/collect.entity';
 import { User } from 'src/entities/user.entity';
-import { Video } from 'src/entities/video.entity';
 import { compares, encrypt } from 'src/utils/common.utils';
 import { Like, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
 import { UpdatePwd } from './dto/pwd-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 

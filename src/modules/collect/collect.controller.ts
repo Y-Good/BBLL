@@ -21,8 +21,22 @@ export class CollectController {
   @Get('list')
   async getCollectList(
     @Query('type') type: CollectEnum,
+    @Query('userId') userId: number,
     @CurrentUser() user: ReqUser,
   ) {
-    return await this.collectService.findByType(type, user.id);
+    return await this.collectService.findByType(type, userId ?? user.id);
+  }
+
+  @Get('trend')
+  async getTrend(@Query('day') day: number, @CurrentUser() user: ReqUser) {
+    return await this.collectService.findTrend(day, user.id);
+  }
+
+  @Get('isFollow')
+  async getIsFollow(
+    @Query('followId') followId: number,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.collectService.getIsFollow(followId, user.id);
   }
 }

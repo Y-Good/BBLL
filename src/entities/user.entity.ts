@@ -10,7 +10,6 @@ import { Time } from './base.entity';
 import { Video } from './video.entity';
 import { Comment } from './comment.entity';
 import { Histroy } from './histroy.entity';
-import { Notify } from './notify.entity';
 
 @Entity('user')
 export class User extends Time {

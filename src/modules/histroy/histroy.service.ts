@@ -21,8 +21,9 @@ export class HistroyService {
     let res = await this.histroyRepository.find({
       where: { user: userId },
       relations: ['video', 'video.user', 'user'],
+      order: { updateDate: 'DESC' },
     });
-    return res.reverse();
+    return res;
   }
 
   ///创建历史记录
@@ -31,7 +32,14 @@ export class HistroyService {
 
     const flag = allHistroy.some(({ video: { id } }) => id == videoId);
 
-    if (flag) return false;
+    if (flag) {
+      let history = await this.histroyRepository.findOne({
+        where: { user: userId, video: videoId },
+      });
+      history.updateDate = new Date();
+      this.histroyRepository.save(history);
+      return;
+    }
 
     const user = await this.userService.getProfile(userId);
     const video = await this.videoRepository.findOne(videoId);
