@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Time } from './base.entity';
@@ -22,8 +21,8 @@ export class Collect extends Time {
   @JoinColumn()
   user: User;
 
-  @Column({ comment: '直播id', default: null })
-  liveId: number;
+  // @Column({ comment: '直播id', default: null })
+  // liveId: number;
 
   @Column({ comment: '收藏类型', enum: CollectEnum, type: 'enum' })
   type: CollectEnum;

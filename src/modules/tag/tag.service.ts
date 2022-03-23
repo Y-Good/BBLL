@@ -11,10 +11,10 @@ export class TagService {
   ) {}
 
   ///用户自定义标签
-  createTag(tagName: string) {
+  async createTag(tagName: string) {
     let tag = new Tag();
     tag.name = tagName;
-    return this.tagRepository.save(tag);
+    return await this.tagRepository.save(tag);
   }
 
   ///获取标签
@@ -25,6 +25,13 @@ export class TagService {
     return await this.tagRepository.findByIds(ids);
   }
 
+  async findVideoByTag(tagId: number) {
+    let res = await this.tagRepository.findOne({
+      where: { id: tagId },
+      relations: ['videos', 'videos.user'],
+    });
+    return res.videos;
+  }
   ///删除标签---好像用不到
   removeTag() {}
 

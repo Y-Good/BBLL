@@ -26,16 +26,16 @@ export class Video extends Time {
   title: string;
 
   @Column({ comment: '观看次数', default: 0 })
-  view: number;
+  view: string;
 
   @Column({ comment: '点赞数', default: 0 })
-  thumbUp: number;
+  thumbUp: string;
 
   @Column({ comment: '收藏数', default: 0 })
-  collections: number;
+  collections: string;
 
-  @Column({ comment: '转发数', default: 0 })
-  share: number;
+  // @Column({ comment: '转发数', default: 0 })
+  // share: number;
 
   @Column({ comment: '视频url地址', default: null })
   url: string;
@@ -43,8 +43,8 @@ export class Video extends Time {
   @Column({ comment: '视频封面', default: null })
   cover: string;
 
-  @Column({ comment: '视频时长', default: 0 })
-  duration: number;
+  @Column({ comment: '视频时长', default: '0' })
+  duration: string;
 
   ///一个视频对应一个用户   发布视频
   @ManyToOne(() => User)
@@ -64,9 +64,9 @@ export class Video extends Time {
   tags: Tag[];
 
   ///分类
-  @ManyToOne(() => Category)
-  @JoinColumn({ name: 'category' })
-  category: Category;
+  // @ManyToOne(() => Category)
+  // @JoinColumn({ name: 'category' })
+  // category: Category;
 
   ///历史记录  也可作为播放量
   @OneToMany(() => Histroy, (history) => history.video, {

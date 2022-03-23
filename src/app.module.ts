@@ -16,7 +16,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/auth.guard';
 import { TagModule } from './modules/tag/tag.module';
 import { WsModule } from './modules/ws/ws.module';
-import { CategoryModule } from './modules/category/category.module';
 import { HistroyModule } from './modules/histroy/histroy.module';
 import { NotifyModule } from './modules/notify/notify.module';
 import { BannerModule } from './modules/banner/banner.module';
@@ -33,7 +32,6 @@ import { SearchModule } from './modules/search/search.module';
     CollectModule,
     TagModule,
     WsModule,
-    CategoryModule,
     HistroyModule,
     NotifyModule,
     BannerModule,

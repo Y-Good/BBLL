@@ -78,7 +78,7 @@ export class VideoService {
         this.notifyService.create(userId, videoId, null, NotifyType.THUMBUP);
         video.users.push(user);
       }
-      video.thumbUp = video.users.length;
+      video.thumbUp = video.users.length.toString();
       let res = await this.videoRepository.save(video);
       /* 有问题 */
       return res != null;

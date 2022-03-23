@@ -40,8 +40,8 @@ export class User extends Time {
   @Column({ comment: '生日', type: 'date', default: null })
   birthday: Date;
 
-  @Column({ comment: '0超级管理员1普通', default: 1 })
-  type: number;
+  // @Column({ comment: '0超级管理员1普通', default: 1 })
+  // type: number;
 
   ///视频
   @OneToMany(() => Video, (video) => video.user)
