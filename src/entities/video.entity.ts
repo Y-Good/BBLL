@@ -31,8 +31,8 @@ export class Video extends Time {
   @Column({ comment: '点赞数', default: 0 })
   thumbUp: string;
 
-  @Column({ comment: '收藏数', default: 0 })
-  collections: string;
+  // @Column({ comment: '收藏数', default: 0 })
+  // collections: string;
 
   // @Column({ comment: '转发数', default: 0 })
   // share: number;

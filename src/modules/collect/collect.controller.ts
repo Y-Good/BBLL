@@ -39,4 +39,13 @@ export class CollectController {
   ) {
     return await this.collectService.getIsFollow(followId, user.id);
   }
+
+  /* 关注、粉丝 */
+  @Get('count')
+  async getCount(
+    @Query('userId') userId: number,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.collectService.getCount(userId ?? user.id);
+  }
 }

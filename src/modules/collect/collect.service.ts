@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as moment from 'moment';
 import { CollectEnum } from 'src/common/enums/collect.enum';
 import { Collect } from 'src/entities/collect.entity';
-import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { VideoService } from '../video/video.service';
@@ -101,6 +100,19 @@ export class CollectService {
         }
       }
     }
+
     return day != null ? select : res;
+  }
+
+  /* 数量 */
+  async getCount(userId: number) {
+    let fans = await this.collectRepository.find({
+      where: { follow: userId, type: CollectEnum.USER },
+    });
+    let follow = await this.collectRepository.find({
+      where: { user: userId, type: CollectEnum.USER },
+    });
+
+    return { fans: fans.length.toString(), follow: follow.length.toString() };
   }
 }

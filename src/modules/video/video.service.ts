@@ -108,7 +108,7 @@ export class VideoService {
   }
 
   ///获取视频信息
-  async getVideoInfo(videoId: any) {
+  async getVideoInfo(videoId: number) {
     let video = await this.videoRepository.findOne({
       where: { id: videoId },
       relations: ['user'],
