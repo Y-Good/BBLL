@@ -56,6 +56,13 @@ export class VideoController {
     return await this.videoService.getVideoRank();
   }
 
+  ///热门排行
+  @Get('hot')
+  @AllowAnon()
+  async getHot() {
+    return await this.videoService.getHot();
+  }
+
   ///获取视频信息
   @Get('info')
   async getVideoInfo(@Query('videoId') videoId: number) {

@@ -51,7 +51,7 @@ export class Video extends Time {
   user: User;
 
   ///视频点赞
-  @ManyToMany(() => User, (user) => user.thumbUpVideo)
+  @ManyToMany(() => User, (user) => user.thumbUpVideo, { onDelete: 'CASCADE' })
   users: User[];
 
   ///视频评论
@@ -75,6 +75,6 @@ export class Video extends Time {
   histroy: Histroy[];
 
   ///通知
-  @ManyToOne(() => Notify)
-  notify: Notify;
+  // @OneToMany(() => Notify, (notify) => notify.video)
+  // notify: Notify[];
 }

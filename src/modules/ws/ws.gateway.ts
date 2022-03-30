@@ -46,6 +46,7 @@ export class WsGateway
 
     //房间名
     this.room = joinRoom != null ? joinRoom : socket.id;
+    console.log(this.room);
 
     for (let index = 0; index < this.roomList.length; index++) {
       const e = this.roomList[index];

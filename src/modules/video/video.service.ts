@@ -4,13 +4,13 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { OmitType } from '@nestjs/mapped-types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotifyType } from 'src/common/enums/notify.enum';
 import { Tag } from 'src/entities/tag.entity';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { Repository } from 'typeorm';
+import * as moment from 'moment';
 import { NotifyService } from '../notify/notify.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 
@@ -78,7 +78,7 @@ export class VideoService {
         this.notifyService.create(userId, videoId, null, NotifyType.THUMBUP);
         video.users.push(user);
       }
-      video.thumbUp = video.users.length.toString();
+      video.thumbUp = (parseInt(video.thumbUp) + 1).toString();
       let res = await this.videoRepository.save(video);
       /* 有问题 */
       return res != null;
@@ -102,9 +102,28 @@ export class VideoService {
     return user.thumbUpVideo.some((video) => video.id == videoId);
   }
 
+  ///热门
+  async getHot() {
+    //15天热门
+    let videoList = await this.videoRepository
+      .createQueryBuilder('video')
+      .where('DATE_SUB(CURDATE(), INTERVAL 15 DAY) <= video.createDate')
+      .leftJoinAndSelect('video.user', 'user')
+      .orderBy('view', 'DESC')
+      .addOrderBy('thumbUp', 'DESC')
+      .limit(20)
+      .getMany();
+    return videoList;
+  }
+
   ///排行
   getVideoRank() {
-    return this.videoRepository.find({ order: { thumbUp: 'ASC' } });
+    return this.videoRepository
+      .createQueryBuilder('video')
+      .leftJoinAndSelect('video.user', 'user')
+      .orderBy('CAST(view as signed)', 'DESC')
+      .limit(20)
+      .getMany();
   }
 
   ///获取视频信息

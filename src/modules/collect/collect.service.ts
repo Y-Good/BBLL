@@ -74,9 +74,11 @@ export class CollectService {
       where: { type: CollectEnum.USER, user: userId },
       relations: ['follow', 'follow.videos'],
     });
+    //用户
     for (let index = 0; index < collect.length; index++) {
-      const videos = collect[index].follow.videos;
+      const videos = collect[index].follow.videos.reverse();
       if (videos.length != 0) {
+        //用户视频
         for (let i = 0; i < videos.length; i++) {
           //相差天数
           let diffDay = moment(new Date()).diff(
@@ -87,13 +89,12 @@ export class CollectService {
           if (videos[i].createDate > collect[index].createDate) {
             let user: any;
             if (day != null && diffDay <= day) {
-              user = collect[index].follow;
-              user.video = videos[i];
+              user = { ...collect[index].follow, video: videos[i] };
               delete user['videos'];
               select.push(user);
             }
-            user = collect[index].follow;
-            user.video = videos[i];
+
+            user = { ...collect[index].follow, video: videos[i] };
             delete user['videos'];
             res.push(user);
           }

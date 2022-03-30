@@ -58,7 +58,7 @@ export class HistroyService {
       where: { video: videoId },
     });
     let video = await this.videoRepository.findOne(videoId);
-    video.view = res.length.toString();
+    video.view = (parseInt(video.view) + 1).toString();
     this.videoRepository.save(video);
   }
 }
