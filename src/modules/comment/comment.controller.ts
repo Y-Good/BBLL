@@ -22,14 +22,20 @@ export class CommentController {
   @Get()
   @AllowAnon()
   ///获取视频评论列表
-  async getCommentList(@Query('videoId') videoId: number) {
-    return await this.commentService.getCommentList(videoId);
+  async getCommentList(
+    @Query('videoId') videoId: number,
+    @Query('userId') userId: number,
+  ) {
+    return await this.commentService.getCommentList(videoId, userId);
   }
 
   ///删除评论
   @Get('remove')
-  async removeComment(@Query('commentId') commentId: number) {
-    return await this.commentService.removeComment(commentId);
+  async removeComment(
+    @Query('commentId') commentId: number,
+    @Query('parentId') parentId: number,
+  ) {
+    return await this.commentService.removeComment(commentId, parentId);
   }
 
   ///获取我的评论

@@ -8,6 +8,8 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { NotifyService } from '../notify/notify.service';
 import { NotifyType } from 'src/common/enums/notify.enum';
 import { CreateSecondCommentDto } from './dto/create-second-comment.dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { ReqUser } from 'src/common/interfaces/req-user.interface';
 @Injectable()
 export class CommentService {
   constructor(
@@ -20,13 +22,32 @@ export class CommentService {
     private readonly notifyService: NotifyService,
   ) {}
 
-  async getCommentList(videoId: number) {
-    return await this.commentRepository
+  async getCommentList(videoId: number, userId?: number) {
+    let user: User;
+    let res = [];
+    let comments = await this.commentRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect('comment.user', 'user')
       .where('videoId=:videoId', { videoId: videoId })
       .orderBy('comment.createDate', 'DESC')
       .getMany();
+    if (userId != null) {
+      user = await this.userRepository.findOne(userId, {
+        relations: ['thumbUpComment'],
+      });
+    }
+    ///处理点赞，号显示
+    for (let i = 0; i < comments.length; i++) {
+      res.push(comments[i]);
+      res[i].isThumbUp = false;
+      if (
+        userId != null &&
+        user.thumbUpComment.some((comment) => comment.id == comments[i].id)
+      ) {
+        res[i].isThumbUp = true;
+      }
+    }
+    return res;
   }
 
   ///评论
@@ -68,10 +89,17 @@ export class CommentService {
   }
 
   ///删除
-  async removeComment(commentId: number) {
+  async removeComment(commentId: number, parentId?: number) {
     if (commentId == null) return false;
     let comment = await this.commentRepository.findOne(commentId);
     let res = await this.commentRepository.remove(comment);
+    ///删除回复
+    if (comment.level == 2 && parentId != null) {
+      let parent = await this.commentRepository.findOne(parentId);
+      parent.replyCount -= 1;
+      this.commentRepository.save(parent);
+    }
+
     return res != null;
   }
 
@@ -122,14 +150,18 @@ export class CommentService {
     comment.level = 2;
     comment.video = video;
     let res = await this.commentRepository.save(comment);
+    ///关联表保存
     parent.secondComment.push(res);
+    ///回复数
+    parent.replyCount = parent.secondComment.length;
     this.notifyService.create(
       userId,
       secondDto.videoId,
       comment,
-      NotifyType.THUMBUP,
+      NotifyType.COMMENT,
     );
     this.commentRepository.save(parent);
+    return res;
   }
 
   ///二级评论查询

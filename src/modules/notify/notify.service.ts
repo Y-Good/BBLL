@@ -29,7 +29,7 @@ export class NotifyService {
     notify.fromUser = fromUser;
     notify.video = video;
     notify.type = type;
-    notify.toUser = video.user;
+    notify.toUser = comment == null ? video.user : comment.user;
     if (comment != null) {
       notify.comment = comment;
     }

@@ -65,6 +65,7 @@ export class VideoController {
 
   ///获取视频信息
   @Get('info')
+  @AllowAnon()
   async getVideoInfo(@Query('videoId') videoId: number) {
     return await this.videoService.getVideoInfo(videoId);
   }
