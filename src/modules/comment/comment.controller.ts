@@ -74,7 +74,10 @@ export class CommentController {
   }
 
   @Get('second')
-  async getSecondComment(@Query('parentId') parentId: number) {
-    return await this.commentService.findSecondComment(parentId);
+  async getSecondComment(
+    @Query('parentId') parentId: number,
+    @Query('userId') userId: number,
+  ) {
+    return await this.commentService.findSecondComment(parentId, userId);
   }
 }

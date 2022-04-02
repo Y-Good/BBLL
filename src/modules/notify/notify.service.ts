@@ -12,6 +12,8 @@ export class NotifyService {
   constructor(
     @InjectRepository(Notify)
     private readonly notifyRepository: Repository<Notify>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
     @Inject(forwardRef(() => VideoService))
     private readonly videoServide: VideoService,
     private readonly userServide: UserService,
@@ -20,19 +22,37 @@ export class NotifyService {
   async create(
     userId: number,
     videoId?: number,
-    comment?: Comment,
+    commentId?: number,
     type?: NotifyType,
   ) {
     let notify = new Notify();
     let video = await this.videoServide.getVideoInfo(videoId);
     let fromUser = await this.userServide.getProfile(userId);
+    let comment = await this.commentRepository.findOne({
+      where: { id: commentId },
+      relations: ['replyUser', 'user'],
+    });
+
     notify.fromUser = fromUser;
     notify.video = video;
     notify.type = type;
-    notify.toUser = comment == null ? video.user : comment.user;
-    if (comment != null) {
-      notify.comment = comment;
+    notify.comment = comment;
+    if (type == NotifyType.COMMENT) {
+      if (comment.level == 1) {
+        notify.toUser = video.user;
+      }
+      if (comment.level == 2) {
+        notify.toUser = comment.replyUser;
+      }
     }
+    if (type == NotifyType.THUMBUP) {
+      if (comment != null) {
+        notify.toUser = comment.user;
+      } else {
+        notify.toUser = video.user;
+      }
+    }
+
     return this.notifyRepository.save(notify);
   }
 
@@ -45,6 +65,7 @@ export class NotifyService {
       .leftJoinAndSelect('notify.comment', 'comment')
       .where('fromUser.id!=:userId', { userId: userId })
       .andWhere('toUser.id=:userId', { userId: userId })
+      .andWhere('comment.level!=2') //过滤2级
       .addSelect('notify.createDate')
       .orderBy('notify.createDate', 'DESC')
       .getMany();
