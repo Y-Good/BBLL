@@ -128,6 +128,7 @@ export class CommentService {
           }
         });
         if (!isThumbUp) {
+          comment.users.push(user);
           this.notifyService.create(
             userId,
             null,

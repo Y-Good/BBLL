@@ -47,17 +47,21 @@ export class UserService {
   }
 
   ///修改用户信息
-  async updateUser(
-    updateUserDto: UpdateUserDto,
-    userId: number,
-  ): Promise<User> {
-    try {
-      let user = await this.userRepository.findOne(userId);
-      user.nickname = updateUserDto.nickname;
-      return await this.userRepository.save(user);
-    } catch (error) {
-      throw new ConflictException(error);
-    }
+  async updateUser(updateUserDto: UpdateUserDto, userId: number) {
+    let isHasNickname = await this.userRepository.findOne({
+      where: { nickname: updateUserDto.nickname },
+    });
+    if (isHasNickname != null) throw new ConflictException('昵称已存在');
+    let user = await this.userRepository.findOne(userId);
+    if (updateUserDto.birthday != null)
+      updateUserDto.birthday = new Date(updateUserDto.birthday);
+    Object.keys(updateUserDto).forEach((key) => {
+      if (updateUserDto[key] != null) {
+        user[key] = updateUserDto[key];
+      }
+    });
+    await this.userRepository.save(user);
+    return await this.userRepository.findOne(userId);
   }
 
   ///修改头像

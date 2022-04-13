@@ -9,10 +9,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { Tag } from 'src/entities/tag.entity';
 import { UserModule } from '../user/user.module';
 import { NotifyModule } from '../notify/notify.module';
+import { Collect } from 'src/entities/collect.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Video, User, Tag]),
+    TypeOrmModule.forFeature([Video, User, Tag, Collect]),
     forwardRef(() => NotifyModule),
     UserModule,
     JwtModule.register({

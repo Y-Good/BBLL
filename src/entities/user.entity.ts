@@ -54,7 +54,6 @@ export class User extends Time {
 
   ///点赞评论
   @ManyToMany((type) => Comment, (comment) => comment.users)
-  @JoinTable({ name: 'thumb_up_comment' })
   thumbUpComment: Comment[];
 
   ///评论

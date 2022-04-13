@@ -63,6 +63,7 @@ export class Comment {
 
   ///用户点赞评论
   @ManyToMany(() => User, (user) => user.thumbUpComment)
+  @JoinTable({ name: 'thumb_up_comment' })
   users: User[];
 
   ///二级评论

@@ -21,8 +21,8 @@ export class VideoController {
 
   @Get()
   @AllowAnon()
-  findAll() {
-    return this.videoService.findAll();
+  findAll(@Query('pageNumber') pageNumber: number) {
+    return this.videoService.findAll(pageNumber);
   }
 
   // @Post('update')
@@ -47,6 +47,14 @@ export class VideoController {
     @CurrentUser() user: ReqUser,
   ) {
     return await this.videoService.isThumbUpVideo(videoId, user.id);
+  }
+
+  @Get('isCollect')
+  async getIsCollect(
+    @Query('videoId') videoId: number,
+    @CurrentUser() user: ReqUser,
+  ) {
+    return await this.videoService.isCollectVideo(videoId, user.id);
   }
 
   ///视频排行

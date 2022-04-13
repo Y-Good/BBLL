@@ -13,6 +13,8 @@ import { Repository } from 'typeorm';
 import * as moment from 'moment';
 import { NotifyService } from '../notify/notify.service';
 import { CreateVideoDto } from './dto/create-video.dto';
+import { Collect } from 'src/entities/collect.entity';
+import { CollectEnum } from 'src/common/enums/collect.enum';
 
 @Injectable()
 export class VideoService {
@@ -21,6 +23,8 @@ export class VideoService {
     private readonly videoRepository: Repository<Video>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Collect)
+    private readonly collectRepository: Repository<Collect>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
     @Inject(forwardRef(() => NotifyService))
@@ -40,13 +44,15 @@ export class VideoService {
     return await this.videoRepository.save(video);
   }
 
-  async findAll(): Promise<Video[]> {
+  async findAll(pageNumber?: number): Promise<Video[]> {
     return await this.videoRepository
       .createQueryBuilder('video')
       .leftJoinAndSelect('video.user', 'user')
       .leftJoinAndSelect('video.tags', 'tags')
       .leftJoinAndSelect('video.users', 'users')
-      .addSelect('video.createDate')
+      // .addSelect('video.createDate')
+      // .take(10)
+      // .skip(pageNumber * 10)
       .getMany();
   }
 
@@ -67,7 +73,7 @@ export class VideoService {
         // 判断是否点赞
         let isExist = video.users.some((user) => user.id == userId);
         let index = video.users.indexOf(user);
-        if (isExist) {
+        if (isExist == false) {
           this.notifyService.create(userId, videoId, null, NotifyType.THUMBUP);
           video.users.push(user);
         } else {
@@ -100,6 +106,14 @@ export class VideoService {
       relations: ['thumbUpVideo'],
     });
     return user.thumbUpVideo.some((video) => video.id == videoId);
+  }
+
+  ///wode 是否收藏了
+  async isCollectVideo(videoId: number, userId: number) {
+    let user = await this.collectRepository.findOne({
+      where: { user: userId, video: videoId, type: CollectEnum.VIDEO },
+    });
+    return user != null;
   }
 
   ///热门

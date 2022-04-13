@@ -63,9 +63,19 @@ export class NotifyService {
       .leftJoinAndSelect('notify.toUser', 'toUser')
       .leftJoinAndSelect('notify.video', 'video')
       .leftJoinAndSelect('notify.comment', 'comment')
-      .where('fromUser.id!=:userId', { userId: userId })
+      .where(
+        new Brackets((qb) => {
+          qb.where(
+            new Brackets((qbs) => {
+              qbs
+                .where('notify.type=:type', { type: NotifyType.COMMENT })
+                .andWhere('comment.level!=2');
+            }),
+          ).orWhere('ISNULL(notify.commentId)');
+        }),
+      )
+      .andWhere('fromUser.id!=:userId', { userId: userId })
       .andWhere('toUser.id=:userId', { userId: userId })
-      .andWhere('comment.level!=2') //过滤2级
       .addSelect('notify.createDate')
       .orderBy('notify.createDate', 'DESC')
       .getMany();
