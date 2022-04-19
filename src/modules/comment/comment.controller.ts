@@ -40,11 +40,9 @@ export class CommentController {
 
   ///获取我的评论
   @Get('my')
-  async getMyComment(
-    @Query('userId') userId: number,
-    @CurrentUser() user: ReqUser,
-  ) {
-    return await this.commentService.getMyComment(userId ?? user.id);
+  @AllowAnon()
+  async getMyComment(@Query('userId') userId: number) {
+    return await this.commentService.getMyComment(userId);
   }
 
   ///dianz
@@ -65,6 +63,7 @@ export class CommentController {
   }
 
   ///二级评论
+
   @Post('second')
   async createSecondComment(
     @Body() secondDto: CreateSecondCommentDto,
@@ -74,6 +73,7 @@ export class CommentController {
   }
 
   @Get('second')
+  @AllowAnon()
   async getSecondComment(
     @Query('parentId') parentId: number,
     @Query('userId') userId: number,

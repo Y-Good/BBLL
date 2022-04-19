@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Histroy } from 'src/entities/histroy.entity';
 import { Video } from 'src/entities/video.entity';
-import { arrayBuffer } from 'stream/consumers';
+import { ILike } from 'typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { UserService } from '../user/user.service';
-import { VideoService } from '../video/video.service';
 
 @Injectable()
 export class HistroyService {
@@ -60,5 +59,16 @@ export class HistroyService {
     let video = await this.videoRepository.findOne(videoId);
     video.view = (parseInt(video.view) + 1).toString();
     this.videoRepository.save(video);
+  }
+
+  async findByKey(key: string, userId: number) {
+    return await this.histroyRepository
+      .createQueryBuilder('histroy')
+      .leftJoinAndSelect('histroy.video', 'video')
+      .leftJoinAndSelect('video.user', 'vuser')
+      .leftJoinAndSelect('histroy.user', 'user')
+      .where('user.id=:userId', { userId: userId })
+      .andWhere('video.title like :key', { key: `%${key}%` })
+      .getMany();
   }
 }

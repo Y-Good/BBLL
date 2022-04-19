@@ -66,6 +66,8 @@ export class WsGateway
       });
     }
     ///在线人数
+    // console.log(Object.keys(this.socketList).length);
+
     this.wss.to(this.room).emit('online', Object.keys(this.socketList).length);
 
     let user = await this.userService.getProfile(parseInt(this.userId));

@@ -1,4 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { AllowAnon } from 'src/common/decorators/allow-anon.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { CollectEnum } from 'src/common/enums/collect.enum';
 import { ReqUser } from 'src/common/interfaces/req-user.interface';
@@ -19,12 +20,12 @@ export class CollectController {
 
   ///获取用户收藏列表或者关注
   @Get('list')
+  @AllowAnon()
   async getCollectList(
     @Query('type') type: CollectEnum,
     @Query('userId') userId: number,
-    @CurrentUser() user: ReqUser,
   ) {
-    return await this.collectService.findByType(type, userId ?? user.id);
+    return await this.collectService.findByType(type, userId);
   }
 
   @Get('trend')
@@ -42,10 +43,8 @@ export class CollectController {
 
   /* 关注、粉丝 */
   @Get('count')
-  async getCount(
-    @Query('userId') userId: number,
-    @CurrentUser() user: ReqUser,
-  ) {
-    return await this.collectService.getCount(userId ?? user.id);
+  @AllowAnon()
+  async getCount(@Query('userId') userId: number) {
+    return await this.collectService.getCount(userId);
   }
 }

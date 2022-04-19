@@ -12,6 +12,11 @@ export class HistroyController {
     return await this.histroyService.findAll(user.id);
   }
 
+  @Get('search')
+  async searchHistroy(@Query('key') key: string, @CurrentUser() user: ReqUser) {
+    return await this.histroyService.findByKey(key, user.id);
+  }
+
   @Post()
   async createHistroy(
     @Query('videoId') videoId: number,

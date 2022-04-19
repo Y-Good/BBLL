@@ -71,7 +71,9 @@ export class NotifyService {
                 .where('notify.type=:type', { type: NotifyType.COMMENT })
                 .andWhere('comment.level!=2');
             }),
-          ).orWhere('ISNULL(notify.commentId)');
+          )
+            .orWhere('ISNULL(notify.commentId)')
+            .orWhere('ISNULL(notify.videoId)');
         }),
       )
       .andWhere('fromUser.id!=:userId', { userId: userId })

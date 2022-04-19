@@ -80,11 +80,9 @@ export class VideoController {
 
   //我发布的视频
   @Get('my')
-  async getMyVideo(
-    @Query('userId') userId: number,
-    @CurrentUser() user: ReqUser,
-  ) {
-    return await this.videoService.getMyVideo(userId ?? user.id);
+  @AllowAnon()
+  async getMyVideo(@Query('userId') userId: number) {
+    return await this.videoService.getMyVideo(userId);
   }
 
   @Get('remove')
