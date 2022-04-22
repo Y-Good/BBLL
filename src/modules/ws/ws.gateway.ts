@@ -16,10 +16,9 @@ import { UserService } from '../user/user.service';
 
 @WebSocketGateway(3003, { transports: ['websocket'] })
 export class WsGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() wss: Server;
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   private logger: Logger = new Logger('ChatGateway');
 
@@ -79,6 +78,7 @@ export class WsGateway
   handleDisconnect(socket: Socket) {
     if (this.socketList.hasOwnProperty(this.userId)) {
       //删除
+      this.logger.log('删除' + this.socketList[this.userId]);
       delete this.socketList[this.userId];
       ///删除房间
       let index: number;

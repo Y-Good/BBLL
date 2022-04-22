@@ -14,7 +14,7 @@ export class HistroyService {
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async findAll(userId: number) {
     let res = await this.histroyRepository.find({
@@ -70,5 +70,12 @@ export class HistroyService {
       .where('user.id=:userId', { userId: userId })
       .andWhere('video.title like :key', { key: `%${key}%` })
       .getMany();
+  }
+
+  async delHistroy(histroyId: number) {
+    let histroy =
+      await this.histroyRepository.findOne({ where: { id: histroyId } });
+    let res = await this.histroyRepository.remove(histroy);
+    return res != null;
   }
 }

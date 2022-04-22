@@ -15,5 +15,6 @@ import { VideoModule } from '../video/video.module';
   ],
   controllers: [CollectController],
   providers: [CollectService],
+  exports: [CollectService]
 })
-export class CollectModule {}
+export class CollectModule { }

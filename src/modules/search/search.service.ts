@@ -4,6 +4,7 @@ import { SearchType } from 'src/common/enums/search.enum';
 import { User } from 'src/entities/user.entity';
 import { Video } from 'src/entities/video.entity';
 import { ILike, Like, Repository } from 'typeorm';
+import { CollectService } from '../collect/collect.service';
 
 @Injectable()
 export class SearchService {
@@ -12,27 +13,39 @@ export class SearchService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
-  ) {}
+    private readonly collectService: CollectService
+  ) { }
 
-  async findUser(key: string) {
-    return await this.userRepository.findOne({
+  async findUser(key: string, userId?: number) {
+    let user = await this.userRepository.findOne({
       where: { nickname: key },
     });
+    if (user == null) return null;
+    let isFollow = userId != null ? await this.collectService.getIsFollow(user.id, userId) : false;
+    let res = { ...user, ...{ 'isFollow': isFollow } }
+    return res;
   }
 
-  async findAll(key: string, type: SearchType) {
+  async findAll(key: string, type: SearchType, userId?: number) {
     let video: Array<any>;
-    let user: User | Array<User>;
+    let res = [];
+    let userList: Array<User>;
 
     switch (type) {
       case SearchType.USER:
-        user = await this.userRepository.find({
+        userList = await this.userRepository.find({
           where: { nickname: ILike(`%${key}%`) },
           order: {
             nickname: 'ASC',
           },
         });
-        return user;
+        for (let i = 0; i < userList.length; i++) {
+          const user = userList[i];
+          let isFollow = userId != null ? await this.collectService.getIsFollow(user.id, userId) : false;
+
+          res.push({ ...user, ...{ 'isFollow': isFollow } })
+        }
+        return res;
       case SearchType.VIDEO:
         video = await this.videoRepository.find({
           where: { title: ILike(`%${key}%`) },

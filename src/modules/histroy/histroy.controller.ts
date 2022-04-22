@@ -5,7 +5,7 @@ import { HistroyService } from './histroy.service';
 
 @Controller('histroy')
 export class HistroyController {
-  constructor(private readonly histroyService: HistroyService) {}
+  constructor(private readonly histroyService: HistroyService) { }
 
   @Get()
   async getHistroy(@CurrentUser() user: ReqUser) {
@@ -23,5 +23,12 @@ export class HistroyController {
     @CurrentUser() user: ReqUser,
   ) {
     return await this.histroyService.createHistroy(videoId, user.id);
+  }
+
+  @Get('delete')
+  async delHistroy(
+    @Query('histroyId') histroyId: number,
+  ) {
+    return await this.histroyService.delHistroy(histroyId);
   }
 }
